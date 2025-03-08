@@ -4,6 +4,7 @@ import com.example.electronic_bulletin_board.dto.LoginRequest;
 import com.example.electronic_bulletin_board.dto.RegisterRequest;
 import com.example.electronic_bulletin_board.model.Users;
 import com.example.electronic_bulletin_board.repository.UserRepository;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,12 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private boolean session = false;
+    @Getter
+    private String currentLogin = null;
+    @Getter
+    private String currentPassword = null;
 
     public Users register(RegisterRequest registerRequest) {
         // Проверяем, существует ли пользователь с таким email
@@ -28,7 +35,7 @@ public class AuthService {
         Users user = new Users();
         user.setEmail(registerRequest.getEmail());
         user.setLogin(registerRequest.getLogin());
-        user.setPassword(registerRequest.getPassword()); // Пароль сохраняется как есть
+        user.setPassword(registerRequest.getPassword());
         user.setRole(registerRequest.getRole());
         return userRepository.save(user);
     }
@@ -36,8 +43,25 @@ public class AuthService {
     public Users login(LoginRequest loginRequest) {
         Users user = userRepository.findByLogin(loginRequest.getLogin());
         if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+            session = true;
+            currentLogin = loginRequest.getLogin();
+            currentPassword = loginRequest.getPassword();
             return user;
         }
         return null;
+    }
+
+    public boolean logout() {
+        if (!session) {
+            return false; // Пользователь не вошел в систему
+        }
+        session = false;
+        currentLogin = null;
+        currentPassword = null;
+        return true; // Пользователь успешно вышел
+    }
+
+    public boolean isSessionActive() {
+        return session;
     }
 }

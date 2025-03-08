@@ -7,5 +7,5 @@ public class RegisterRequest {
     private String email;
     private String login;
     private String password;
-    private String role = "user";
+    private String role = "Пользователь";
 }

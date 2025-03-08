@@ -2,20 +2,24 @@ package com.example.electronic_bulletin_board.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 @Entity
-@Table(name = "categories") // Указываем имя таблицы в БД
+@Table(name = "categories")
 public class Categories {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Уникальный идентификатор категории", example = "1")
     private Integer id;
 
-    @Column(nullable = false) // Название категории не может быть null
+    @Column(nullable = false)
+    @Schema(description = "Название категории", example = "Электроника")
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "parent_category_id") // Указываем имя столбца в БД
-    private Categories parentCategory; // Используем camelCase для названия поля
+    @JoinColumn(name = "parent_category_id")
+    @Schema(description = "Родительская категория (если есть)", example = "null")
+    private Categories parentCategory;
 }
