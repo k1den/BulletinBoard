@@ -8,4 +8,6 @@ public class RegisterRequest {
     private String login;
     private String password;
     private String role = "Пользователь";
+    private String phone;
+    private String confirmPassword = null;
 }

@@ -29,13 +29,17 @@ public class AuthController {
     })
     public ResponseEntity<?> register(
             @RequestParam String email,
+            @RequestParam(required = false) String phone,
             @RequestParam String login,
-            @RequestParam String password) {
+            @RequestParam String password,
+            @RequestParam String confirmPassword) {
         try {
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setEmail(email);
+            registerRequest.setPhone(phone);
             registerRequest.setLogin(login);
             registerRequest.setPassword(password);
+            registerRequest.setConfirmPassword(confirmPassword);
 
             Users user = authService.register(registerRequest);
             return ResponseEntity.ok(user);
@@ -51,10 +55,10 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Пользователь не существует/неверный логин или пароль")
     })
     public ResponseEntity<Users> login(
-            @RequestParam String login,
+            @RequestParam String email, // Используем email для входа
             @RequestParam String password) {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setLogin(login);
+        loginRequest.setEmail(email);
         loginRequest.setPassword(password);
 
         Users user = authService.login(loginRequest);
