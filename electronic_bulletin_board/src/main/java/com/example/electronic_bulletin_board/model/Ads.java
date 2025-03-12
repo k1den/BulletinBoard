@@ -5,6 +5,7 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.Date;
 
 @Data
@@ -39,6 +40,7 @@ public class Ads {
     @Schema(description = "Дата создания объявления")
     private Date date;
 
+    @Lob
     @Schema(description = "Фотография объявления в виде бинарных данных")
-    private String photo;
+    private byte[] photo;
 }

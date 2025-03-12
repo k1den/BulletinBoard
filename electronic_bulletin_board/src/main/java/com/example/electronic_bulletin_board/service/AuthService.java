@@ -60,7 +60,6 @@ public class AuthService {
         user.setPassword(registerRequest.getPassword());
         user.setRole(registerRequest.getRole());
         user.setPhone(registerRequest.getPhone());
-        user.setConfirmPassword(registerRequest.getConfirmPassword());
         return userRepository.save(user);
     }
 

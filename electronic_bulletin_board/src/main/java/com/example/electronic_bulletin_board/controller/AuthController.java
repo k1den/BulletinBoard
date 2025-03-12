@@ -92,4 +92,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Сессия не активна");
         }
     }
+
+
 }

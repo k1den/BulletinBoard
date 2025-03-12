@@ -27,6 +27,7 @@ public class Users {
     @Schema(description = "Телефон пользователя")
     private String phone;
 
+    @Transient
     @Schema(description = "Повтор пароля")
     private String confirmPassword;
 }

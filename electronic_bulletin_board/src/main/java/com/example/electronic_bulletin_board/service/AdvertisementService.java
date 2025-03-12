@@ -9,9 +9,19 @@ import com.example.electronic_bulletin_board.repository.CategoryRepository;
 import com.example.electronic_bulletin_board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -27,34 +37,30 @@ public class AdvertisementService {
     private UserRepository usersRepository;
 
     @Autowired
-    private AuthService authService; // Добавляем AuthService
+    private AuthService authService;
 
     // Добавление объявления
     public Ads addAdvertisement(AdvertisementDto advertisementDto) {
-        checkUserLoggedIn(); // Проверяем, вошел ли пользователь в систему
+        checkUserLoggedIn();
 
-        // Получаем текущего пользователя
         Users user = getCurrentUser();
 
-        // Проверяем, что пользователь не является "Гостем"
         if ("Гость".equals(user.getRole())) {
             throw new RuntimeException("Гости не могут создавать объявления");
         }
 
-        // Создаем объявление
         Ads ads = new Ads();
         ads.setTitle(advertisementDto.getTitle());
         ads.setDescription(advertisementDto.getDescription());
         ads.setPrice(advertisementDto.getPrice());
-        ads.setDate(new Date()); // Автоматически устанавливаем текущую дату
+        ads.setDate(new Date());
         ads.setPhoto(advertisementDto.getPhoto());
 
-        // Устанавливаем категорию
+        // Устанавливаем категорию по id
         Categories category = categoriesRepository.findById(advertisementDto.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
         ads.setIdCategory(category);
 
-        // Устанавливаем пользователя
         ads.setIdUsers(user);
 
         return adsRepository.save(ads);
@@ -67,8 +73,7 @@ public class AdvertisementService {
         Ads ads = adsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
 
-        // Получаем текущего пользователя
-        Users currentUser = getCurrentUser();
+        Users currentUser = getCurrentUser(); // Получаем текущего пользователя
 
         // Проверяем права доступа
         if (!currentUser.getRole().equals("Администратор") && !ads.getIdUsers().getId().equals(currentUser.getId())) {
@@ -85,8 +90,7 @@ public class AdvertisementService {
         Ads existingAds = adsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
 
-        // Получаем текущего пользователя
-        Users currentUser = getCurrentUser();
+        Users currentUser = getCurrentUser(); // Получаем текущего пользователя
 
         // Проверяем права доступа
         if (!currentUser.getRole().equals("Администратор") && !existingAds.getIdUsers().getId().equals(currentUser.getId())) {
@@ -96,7 +100,7 @@ public class AdvertisementService {
         existingAds.setTitle(advertisementDto.getTitle());
         existingAds.setDescription(advertisementDto.getDescription());
         existingAds.setPrice(advertisementDto.getPrice());
-        existingAds.setPhoto(advertisementDto.getPhoto());
+        existingAds.setPhoto(advertisementDto.getPhoto()); // Обновляем изображение
 
         Categories category = categoriesRepository.findById(advertisementDto.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
@@ -116,6 +120,11 @@ public class AdvertisementService {
         return adsRepository.findByIdCategory_Title(categoryName);
     }
 
+    // Получение всех объявлений
+    public List<Ads> getAllAdvertisements() {
+        return adsRepository.findAll();
+    }
+
     // Вспомогательный метод для проверки, вошел ли пользователь в систему
     private void checkUserLoggedIn() {
         if (!authService.isSessionActive()) {
@@ -124,8 +133,38 @@ public class AdvertisementService {
     }
 
     // Вспомогательный метод для получения текущего пользователя
-    private Users getCurrentUser() {
+    public Users getCurrentUser() {
         String currentLogin = authService.getCurrentLogin();
         return usersRepository.findByLogin(currentLogin);
+    }
+
+    public static byte[] compressImage(MultipartFile file, float quality) throws IOException {
+        // Чтение изображения из MultipartFile
+        BufferedImage image = ImageIO.read(file.getInputStream());
+
+        // Создание ByteArrayOutputStream для хранения сжатого изображения
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(byteArrayOutputStream);
+
+        // Получение ImageWriter для формата JPEG
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+        ImageWriter writer = writers.next();
+
+        // Настройка параметров сжатия
+        writer.setOutput(imageOutputStream);
+        ImageWriteParam param = writer.getDefaultWriteParam();
+        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        param.setCompressionQuality(quality); // Установка качества сжатия (0.05f = 5%)
+
+        // Запись сжатого изображения
+        writer.write(null, new IIOImage(image, null, null), param);
+
+        // Освобождение ресурсов
+        writer.dispose();
+        imageOutputStream.close();
+        byteArrayOutputStream.close();
+
+        // Возвращение сжатого изображения в виде массива байтов
+        return byteArrayOutputStream.toByteArray();
     }
 }

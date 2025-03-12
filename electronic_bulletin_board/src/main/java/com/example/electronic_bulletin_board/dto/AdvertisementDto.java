@@ -15,6 +15,8 @@ public class AdvertisementDto {
     @Schema(description = "ID категории")
     private Integer idCategory;
 
+    private String categoryTitle;
+
     @Schema(description = "Описание объявления")
     private String description;
 
@@ -28,5 +30,5 @@ public class AdvertisementDto {
     private Date date;
 
     @Schema(description = "Фотография объявления в виде бинарных данных")
-    private String photo;
+    private byte[] photo;
 }

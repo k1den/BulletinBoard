@@ -1,6 +1,7 @@
 package com.example.electronic_bulletin_board.repository;
 
 import com.example.electronic_bulletin_board.model.Ads;
+import com.example.electronic_bulletin_board.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;

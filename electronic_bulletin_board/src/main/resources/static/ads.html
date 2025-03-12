@@ -1,38 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><!DOCTYPE html>
-        <html lang="ru">
-        <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Управление Объявлениями</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление Объявлениями</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f3f4f6;
             margin: 0;
             padding: 20px;
         }
-        h1, h2 {
+
+        h1 {
             color: #343a40;
+            text-align: center;
         }
-        form {
+
+        .container {
+            max-width: 800px;
+            margin: auto;
             background-color: #ffffff;
             padding: 20px;
-            margin-bottom: 20px;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        input, textarea {
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, textarea, select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ced4da;
             border-radius: 4px;
-            box-sizing: border-box;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -41,150 +46,305 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
+            width: 100%;
         }
+
         button:hover {
             background-color: #0056b3;
         }
-        div#advertisementDetails, div#advertisementsByCategory {
-            background: #e9ecef;
-            padding: 10px;
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ced4da;
             border-radius: 5px;
-            margin-top: 10px;
+            margin: 10px 0;
+            padding: 15px;
+            width: 100%;
+            max-width: 200px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
 <h1>Управление Объявлениями</h1>
+<div class="container">
+    <button id="addAdvertisementButton" onclick="toggleForm('addAdvertisementForm')">Добавить объявление</button>
+    <button id="searchByCategoryButton" onclick="toggleSearchForm()">Поиск по категории</button>
 
-<h2>Добавить Объявление</h2>
-<form id="addAdvertisementForm">
-    <input type="text" id="title" placeholder="Название" required>
-    <input type="number" id="idCategory" placeholder="ID категории" required>
-    <textarea id="description" placeholder="Описание" required></textarea>
-    <input type="text" id="price" placeholder="Цена" required>
-    <input type="number" id="idUsers" placeholder="ID пользователя" required>
-    <input type="text" id="photo" placeholder="Ссылка на фото" required>
-    <button type="submit">Добавить Объявление</button>
-</form>
+    <!-- Форма добавления объявления -->
+    <form id="addAdvertisementForm" style="display:none;" enctype="multipart/form-data">
+        <h2>Добавить Объявление</h2>
+        <input type="text" id="title" placeholder="Название" required>
+        <select id="categorySelect" required>
+            <option value="">Выберите категорию</option>
+        </select>
+        <textarea id="description" placeholder="Описание" required></textarea>
+        <input type="text" id="price" placeholder="Цена" required>
+        <input type="file" id="photo" accept="image/*" required>
+        <button type="submit">Добавить Объявление</button>
+    </form>
 
-<h2>Удалить Объявление</h2>
-<form id="deleteAdvertisementForm">
-    <input type="number" id="deleteId" placeholder="ID объявления" required>
-    <button type="submit">Удалить Объявление</button>
-</form>
+    <!-- Форма редактирования объявления -->
+    <form id="editAdvertisementForm" style="display:none;" enctype="multipart/form-data">
+        <h2>Редактировать Объявление</h2>
+        <input type="hidden" id="editId">
+        <input type="text" id="editTitle" placeholder="Название" required>
+        <select id="editCategorySelect" required>
+            <option value="">Выберите категорию</option>
+        </select>
+        <textarea id="editDescription" placeholder="Описание" required></textarea>
+        <input type="text" id="editPrice" placeholder="Цена" required>
+        <input type="file" id="editPhoto" accept="image/*">
+        <button type="submit">Сохранить изменения</button>
+    </form>
 
-<h2>Редактировать Объявление</h2>
-<form id="updateAdvertisementForm">
-    <input type="number" id="updateId" placeholder="ID объявления" required>
-    <input type="text" id="updateTitle" placeholder="Новое название">
-    <input type="number" id="updateCategory" placeholder="Новый ID категории">
-    <textarea id="updateDescription" placeholder="Новое описание"></textarea>
-    <input type="text" id="updatePrice" placeholder="Новая цена">
-    <input type="text" id="updatePhoto" placeholder="Новая ссылка на фото">
-    <button type="submit">Редактировать Объявление</button>
-</form>
+    <!-- Поиск по категории -->
+    <div id="searchCategoryContainer" style="display:none;">
+        <h2>Поиск по категории</h2>
+        <select id="categoryNameSelect">
+            <option value="">Выберите категорию</option>
+        </select>
+        <button id="getByCategoryButton">Получить Объявления</button>
+    </div>
 
-<h2>Получить Объявление</h2>
-<input type="number" id="getId" placeholder="ID объявления">
-<button id="getAdvertisementButton">Получить Объявление</button>
-<div id="advertisementDetails"></div>
+    <div id="advertisementsByCategory"></div>
 
-<h2>Объявления по категории</h2>
-<input type="text" id="categoryName" placeholder="Название категории">
-<button id="getByCategoryButton">Получить Объявления</button>
-<div id="advertisementsByCategory"></div>
+    <h2>Все Объявления</h2>
+    <div class="card-container" id="allAdvertisements"></div>
+</div>
 
 <script>
     const apiUrl = '/api/advertisements';
+    const categoriesUrl = '/api/advertisements/categories';
 
+    let categories = [];
+
+
+    // Загрузка категорий при загрузке страницы
+    function loadCategories() {
+        fetch(categoriesUrl)
+            .then(response => response.json())
+            .then(data => {
+                categories = data;
+                const categorySelect = document.getElementById('categorySelect');
+                const editCategorySelect = document.getElementById('editCategorySelect');
+                const categoryNameSelect = document.getElementById('categoryNameSelect');
+
+                // Очистка и заполнение выпадающих списков
+                [categorySelect, editCategorySelect, categoryNameSelect].forEach(select => {
+                    select.innerHTML = '<option value="">Выберите категорию</option>';
+                    data.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id; // Используем ID категории
+                        option.textContent = category.title; // Отображаем название категории
+                        select.appendChild(option);
+                    });
+                });
+            })
+            .catch(error => console.error('Ошибка загрузки категорий:', error));
+    }
+
+    function toggleForm(formId) {
+        const form = document.getElementById(formId);
+        form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        if (form.style.display === 'block') {
+            if (formId !== 'addAdvertisementForm') document.getElementById('addAdvertisementForm').style.display = 'none';
+            if (formId !== 'editAdvertisementForm') document.getElementById('editAdvertisementForm').style.display = 'none';
+            document.getElementById('searchCategoryContainer').style.display = 'none';
+        }
+    }
+
+    function toggleSearchForm() {
+        const searchContainer = document.getElementById('searchCategoryContainer');
+        searchContainer.style.display = searchContainer.style.display === 'block' ? 'none' : 'block';
+        if (searchContainer.style.display === 'block') {
+            document.getElementById('addAdvertisementForm').style.display = 'none';
+            document.getElementById('editAdvertisementForm').style.display = 'none';
+        }
+    }
+
+    // Добавление объявления
     document.getElementById('addAdvertisementForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        const data = {
-            title: document.getElementById('title').value,
-            idCategory: document.getElementById('idCategory').value,
-            description: document.getElementById('description').value,
-            price: document.getElementById('price').value,
-            idUsers: document.getElementById('idUsers').value,
-            photo: document.getElementById('photo').value
-        };
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('idCategory', document.getElementById('categorySelect').value);
+        formData.append('description', document.getElementById('description').value);
+        formData.append('price', document.getElementById('price').value);
+        formData.append('photo', document.getElementById('photo').files[0]);
+
         fetch(apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(response => response.json()).then(data => {
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || 'Ошибка при добавлении объявления'); });
+            }
+            return response.json();
+        })
+        .then(data => {
             alert('Объявление добавлено: ' + JSON.stringify(data));
-        }).catch(error => console.error('Ошибка:', error));
+            document.getElementById('addAdvertisementForm').reset();
+            document.getElementById('addAdvertisementForm').style.display = 'none';
+            getAllAdvertisements();
+        })
+        .catch(error => {
+            alert(error.message);
+            console.error('Ошибка:', error);
+        });
     });
 
-    document.getElementById('deleteAdvertisementForm').addEventListener('submit', function(event) {
+    // Редактирование объявления
+    document.getElementById('editAdvertisementForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        const id = document.getElementById('deleteId').value;
-        fetch(`${apiUrl}/${id}`, {
-            method: 'DELETE'
-        }).then(() => {
-            alert('Объявление удалено');
-        }).catch(error => console.error('Ошибка:', error));
-    });
+        const formData = new FormData();
+        formData.append('title', document.getElementById('editTitle').value);
+        formData.append('idCategory', document.getElementById('editCategorySelect').value);
+        formData.append('description', document.getElementById('editDescription').value);
+        formData.append('price', document.getElementById('editPrice').value);
+        if (document.getElementById('editPhoto').files[0]) {
+            formData.append('photo', document.getElementById('editPhoto').files[0]);
+        }
 
-    document.getElementById('updateAdvertisementForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const id = document.getElementById('updateId').value;
-        const data = {};
-        if (document.getElementById('updateTitle').value) {
-            data.title = document.getElementById('updateTitle').value;
-        }
-        if (document.getElementById('updateCategory').value) {
-            data.idCategory = document.getElementById('updateCategory').value;
-        }
-        if (document.getElementById('updateDescription').value) {
-            data.description = document.getElementById('updateDescription').value;
-        }
-        if (document.getElementById('updatePrice').value) {
-            data.price = document.getElementById('updatePrice').value;
-        }
-        if (document.getElementById('updatePhoto').value) {
-            data.photo = document.getElementById('updatePhoto').value;
-        }
+        const id = document.getElementById('editId').value;
+
         fetch(`${apiUrl}/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(response => response.json()).then(data => {
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || 'Ошибка при редактировании объявления'); });
+            }
+            return response.json();
+        })
+        .then(data => {
             alert('Объявление обновлено: ' + JSON.stringify(data));
-        }).catch(error => console.error('Ошибка:', error));
+            document.getElementById('editAdvertisementForm').reset();
+            document.getElementById('editAdvertisementForm').style.display = 'none';
+            getAllAdvertisements();
+        })
+        .catch(error => {
+            alert(error.message);
+            console.error('Ошибка:', error);
+        });
     });
 
-    document.getElementById('getAdvertisementButton').addEventListener('click', function() {
-        const id = document.getElementById('getId').value;
+    // Поиск по категории
+    document.getElementById('getByCategoryButton').addEventListener('click', function() {
+        const categoryName = document.getElementById('categoryNameSelect').options[document.getElementById('categoryNameSelect').selectedIndex].text;
+        fetch(`${apiUrl}/by-category?categoryName=${encodeURIComponent(categoryName)}`)
+            .then(response => response.json())
+            .then(data => {
+                const advertisementsByCategoryContainer = document.getElementById('advertisementsByCategory');
+                advertisementsByCategoryContainer.innerHTML = '';
+                data.forEach(ad => {
+                    fetch(`${apiUrl}/photo/${ad.id}`)
+                        .then(response => response.text())
+                        .then(base64Image => {
+                            const card = document.createElement('div');
+                            card.className = 'card';
+                            card.innerHTML = `
+                                <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
+                                <h3>${ad.title}</h3>
+                                <p>Цена: ${ad.price}₽</p>
+                                <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
+                                <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
+                            `;
+                            advertisementsByCategoryContainer.appendChild(card);
+                        })
+                        .catch(error => console.error('Ошибка загрузки изображения:', error));
+                });
+            })
+            .catch(error => console.error('Ошибка:', error));
+    });
+
+    // Получение всех объявлений
+    function getAllAdvertisements() {
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const allAdvertisementsContainer = document.getElementById('allAdvertisements');
+                allAdvertisementsContainer.innerHTML = '';
+                data.forEach(ad => {
+                    fetch(`${apiUrl}/photo/${ad.id}`)
+                        .then(response => response.text())
+                        .then(base64Image => {
+                            const card = document.createElement('div');
+                            card.className = 'card';
+                            card.innerHTML = `
+                                <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
+                                <h3>${ad.title}</h3>
+                                <p>Цена: ${ad.price}₽</p>
+                                <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
+                                <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
+                            `;
+                            allAdvertisementsContainer.appendChild(card);
+                        })
+                        .catch(error => console.error('Ошибка загрузки изображения:', error));
+                });
+            })
+            .catch(error => console.error('Ошибка:', error));
+    }
+
+    // Редактирование объявления (заполнение формы)
+    function editAdvertisement(id) {
         fetch(`${apiUrl}/${id}`)
             .then(response => response.json())
-            .then(data => {
-                document.getElementById('advertisementDetails').innerText = JSON.stringify(data);
+            .then(ad => {
+                document.getElementById('editId').value = ad.id;
+                document.getElementById('editTitle').value = ad.title;
+                document.getElementById('editCategorySelect').value = ad.idCategory.id;
+                document.getElementById('editDescription').value = ad.description;
+                document.getElementById('editPrice').value = ad.price;
+                toggleForm('editAdvertisementForm');
             })
-            .catch(error => console.error('Ошибка:', error));
-    });
+            .catch(error => {
+                alert('Ошибка при загрузке данных объявления');
+                console.error('Ошибка:', error);
+            });
+    }
 
-    document.getElementById('getByCategoryButton').addEventListener('click', function() {
-        const categoryName = document.getElementById('categoryName').value;
-        fetch(`${apiUrl}/by-category?categoryName=${categoryName}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('advertisementsByCategory').innerText = JSON.stringify(data);
-            })
-            .catch(error => console.error('Ошибка:', error));
-    });
+    // Удаление объявления
+    function deleteAdvertisement(id) {
+        fetch(`${apiUrl}/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || 'Ошибка при удалении объявления'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Объявление удалено: ' + JSON.stringify(data));
+            getAllAdvertisements();
+        })
+        .catch(error => {
+            alert(error.message);
+            console.error('Ошибка:', error);
+        });
+    }
+
+    window.onload = function() {
+        loadCategories();
+        getAllAdvertisements();
+    };
 </script>
-
-</body>
-</html>
-</title>
-</head>
-<body>
 
 </body>
 </html>
