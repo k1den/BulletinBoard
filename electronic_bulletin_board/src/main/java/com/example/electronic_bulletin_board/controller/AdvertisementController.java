@@ -155,4 +155,15 @@ public class AdvertisementController {
     public List<Categories> getAllCategories() {
         return categoryRepository.findAll();
     }
+
+    @GetMapping("/current-user")
+    @Operation(summary = "Получение информации о текущем пользователе", description = "Возвращает информацию о текущем пользователе")
+    public ResponseEntity<Users> getCurrentUser() {
+        Users currentUser = advertisementService.getCurrentUser();
+        if (currentUser != null) {
+            return ResponseEntity.ok(currentUser);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 }
