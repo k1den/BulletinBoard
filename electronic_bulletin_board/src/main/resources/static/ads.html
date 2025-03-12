@@ -173,7 +173,9 @@
             <option value="">Выберите категорию</option>
         </select>
         <button id="getByCategoryButton">Получить Объявления</button>
+        <button id="resetSearchButton" style="display:none;" onclick="resetSearch()">Сбросить поиск</button> <!-- Кнопка сброса -->
     </div>
+
 
     <div id="advertisementsByCategory"></div>
 
@@ -209,6 +211,12 @@
             alert('Ошибка при выходе из системы');
         });
     }
+
+    function resetSearch() {
+        document.getElementById('advertisementsByCategory').innerHTML = ''; // Очищаем результаты
+        document.getElementById('resetSearchButton').style.display = 'none'; // Скрываем кнопку сброса
+    }
+
 
     function updateButtons() {
     const cards = document.querySelectorAll('.card');
@@ -367,27 +375,36 @@
             .then(response => response.json())
             .then(data => {
                 const advertisementsByCategoryContainer = document.getElementById('advertisementsByCategory');
-                advertisementsByCategoryContainer.innerHTML = '';
+                advertisementsByCategoryContainer.innerHTML = ''; // Очищаем контейнер
                 data.forEach(ad => {
                     fetch(`${apiUrl}/photo/${ad.id}`)
                         .then(response => response.text())
                         .then(base64Image => {
                             const card = document.createElement('div');
                             card.className = 'card';
+                            card.setAttribute('data-ad-id', ad.id);
+                            card.setAttribute('data-ad-user-id', ad.idUsers.id);
                             card.innerHTML = `
                                 <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
                                 <h3>${ad.title}</h3>
                                 <p>Цена: ${ad.price}₽</p>
-                                <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
-                                <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
+                                ${currentUser && (currentUser.role === 'Администратор' || currentUser.id === ad.idUsers.id) ? `
+                                    <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
+                                    <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
+                                ` : ''}
                             `;
                             advertisementsByCategoryContainer.appendChild(card);
+                            updateButtons(); // Обновляем кнопки, чтобы скрывать/показывать их в зависимости от прав пользователя
                         })
                         .catch(error => console.error('Ошибка загрузки изображения:', error));
                 });
+                document.getElementById('resetSearchButton').style.display = 'block'; // Показываем кнопку сброса
             })
             .catch(error => console.error('Ошибка:', error));
     });
+
+
+
 
     // Получение всех объявлений
     function getAllAdvertisements() {
