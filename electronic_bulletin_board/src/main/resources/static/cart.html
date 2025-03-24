@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="css/ads.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-buttons">
+        <button onclick="window.location.href='ads.html'">На главную</button>
+    </div>
+    <div id="navMessages">
+        <div id="navErrorContainer" style="display: none; color: red; padding: 5px 10px; border: 1px solid red; background-color: #ffe6e6; border-radius: 4px;">
+            <p id="navErrorMessage"></p>
+        </div>
+        <div id="navSuccessContainer" style="display: none; color: green; padding: 5px 10px; border: 1px solid green; background-color: #e6ffe6; border-radius: 4px;">
+            <p id="navSuccessMessage"></p>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button id="loginButton" onclick="window.location.href='login.html'">Войти</button>
+        <button id="logoutButton" onclick="logout()">Выйти</button>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Корзина</h2>
+    <div class="card-container" id="cartItems"></div>
+    <div id="totalPrice" style="font-size: 1.5em; font-weight: bold; margin-top: 20px;"></div>
+</div>
+
+<script src="js/cart.js"></script>
+</body>
+</html>

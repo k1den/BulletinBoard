@@ -8,6 +8,8 @@ import com.example.electronic_bulletin_board.validators.AuthValidator;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class AuthService {
@@ -20,6 +22,8 @@ public class AuthService {
     private String currentLogin = null;
     @Getter
     private String currentPassword = null;
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Users register(RegisterRequest registerRequest) {
         // Валидация email
@@ -39,25 +43,26 @@ public class AuthService {
             throw new RuntimeException("Пароль должен содержать не менее 6 символов");
         }
 
+        // Повторяется ли?
         if (!AuthValidator.doPasswordsMatch(registerRequest.getPassword(), registerRequest.getConfirmPassword())) {
             throw new RuntimeException("Пароли не совпадают");
         }
 
-        // Проверяем, существует ли пользователь с таким email
+        // Проверяем, существует ли юзер с таким email
         if (userRepository.findByEmail(registerRequest.getEmail()) != null) {
             throw new RuntimeException("Пользователь с такой почтой уже существует");
         }
 
-        // Проверяем, существует ли пользователь с таким логином
+        // Проверяем, существует ли юзер с таким логином
         if (userRepository.findByLogin(registerRequest.getLogin()) != null) {
             throw new RuntimeException("Пользователь с таким логином уже существует");
         }
 
-        // Создаем нового пользователя
+        // Создаем нового юзера
         Users user = new Users();
         user.setEmail(registerRequest.getEmail());
         user.setLogin(registerRequest.getLogin());
-        user.setPassword(registerRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // Хэшируем пароль
         user.setRole(registerRequest.getRole());
         user.setPhone(registerRequest.getPhone());
         return userRepository.save(user);
@@ -65,7 +70,7 @@ public class AuthService {
 
     public Users login(LoginRequest loginRequest) {
         Users user = userRepository.findByEmail(loginRequest.getEmail());
-        if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) { // Проверяем пароль
             session = true;
             currentLogin = user.getLogin();
             currentPassword = user.getPassword();

@@ -4,63 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        .container h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            text-align: center;
-        }
-        .container input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .container button:hover {
-            background-color: #218838;
-        }
-        .container a {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .container a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="css/register.css">
 </head>
 <body>
 <div class="container">
     <h2>Регистрация</h2>
+    <div id="errorContainer">
+        <span id="errorMessage"></span>
+    </div>
     <input type="email" id="email" placeholder="Email">
     <input type="text" id="phone" placeholder="Телефон (необязательно)">
     <input type="text" id="login" placeholder="Логин">
@@ -70,30 +21,6 @@
     <a href="login.html">Уже есть аккаунт? Войдите</a>
 </div>
 
-<script>
-    async function register() {
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const login = document.getElementById('login').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&login=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}&confirmPassword=${encodeURIComponent(confirmPassword)}`
-        });
-
-        if (response.ok) {
-            alert('Регистрация прошла успешно!');
-            window.location.href = 'login.html';
-        } else {
-            const error = await response.text();
-            alert('Ошибка: ' + error);
-        }
-    }
-</script>
+<script src="js/register.js"></script>
 </body>
 </html>

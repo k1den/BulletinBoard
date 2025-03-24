@@ -4,132 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управление Объявлениями</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Стили для навигационного бара */
-        nav {
-            background-color: #007bff;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        nav .nav-buttons {
-            display: flex;
-            gap: 10px; /* Расстояние между кнопками */
-        }
-
-        nav button {
-            background-color: transparent;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        nav button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        nav #logoutButton {
-            background-color: #dc3545;
-        }
-
-        nav #logoutButton:hover {
-            background-color: #c82333;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .card {
-            background: white;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            margin: 10px 0;
-            padding: 15px;
-            width: 100%;
-            max-width: 200px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card img {
-            max-width: 100%;
-            border-radius: 5px;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .card h3, .card p {
-            margin: 10px 0;
-        }
-
-        .card .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/ads.css">
 </head>
 <body>
 
 <nav>
     <div class="nav-buttons">
-        <button id="addAdvertisementButton" onclick="toggleForm('addAdvertisementForm')">Добавить объявление</button>
-        <button id="searchByCategoryButton" onclick="toggleSearchForm()">Поиск по категории</button>
+        <button id="addAdvertisementButton" onclick="toggleForm('addAdvertisementForm')">Добавить</button>
+        <button id="searchByCategoryButton" onclick="toggleSearchForm()">Поиск</button>
+        <button onclick="window.location.href='cart.html'">Корзина</button>
+    </div>
+    <div id="navMessages">
+        <div id="navErrorContainer"
+             style="display: none; color: red; padding: 5px 10px; border: 1px solid red; background-color: #ffe6e6; border-radius: 4px;">
+            <p id="navErrorMessage"></p>
+        </div>
+        <div id="navSuccessContainer"
+             style="display: none; color: green; padding: 5px 10px; border: 1px solid green; background-color: #e6ffe6; border-radius: 4px;">
+            <p id="navSuccessMessage"></p>
+        </div>
     </div>
     <div class="nav-buttons">
         <button id="loginButton" onclick="window.location.href='login.html'">Войти</button>
@@ -137,10 +30,8 @@
     </div>
 </nav>
 
-<!-- Основной контент -->
-<div class="container">
-    <!-- Форма добавления объявления -->
-    <form id="addAdvertisementForm" style="display:none;" enctype="multipart/form-data">
+<div id="formContainer" class="form-container" style="display: none;">
+    <form id="addAdvertisementForm" enctype="multipart/form-data">
         <h2>Добавить Объявление</h2>
         <input type="text" id="title" placeholder="Название" required>
         <select id="categorySelect" required>
@@ -151,8 +42,20 @@
         <input type="file" id="photo" accept="image/*" required>
         <button type="submit">Добавить Объявление</button>
     </form>
+</div>
 
-    <!-- Форма редактирования объявления -->
+<div id="searchContainer" class="search-container" style="display: none;">
+    <div id="searchCategoryContainer">
+        <h2>Поиск по категории</h2>
+        <select id="categoryNameSelect">
+            <option value="">Выберите категорию</option>
+        </select>
+        <button id="getByCategoryButton">Получить Объявления</button>
+        <button id="resetSearchButton" style="display:none;" onclick="resetSearch()">Сбросить поиск</button>
+    </div>
+</div>
+
+<div class="container">
     <form id="editAdvertisementForm" style="display:none;" enctype="multipart/form-data">
         <h2>Редактировать Объявление</h2>
         <input type="hidden" id="editId">
@@ -166,320 +69,12 @@
         <button type="submit">Сохранить изменения</button>
     </form>
 
-    <!-- Поиск по категории -->
-    <div id="searchCategoryContainer" style="display:none;">
-        <h2>Поиск по категории</h2>
-        <select id="categoryNameSelect">
-            <option value="">Выберите категорию</option>
-        </select>
-        <button id="getByCategoryButton">Получить Объявления</button>
-        <button id="resetSearchButton" style="display:none;" onclick="resetSearch()">Сбросить поиск</button> <!-- Кнопка сброса -->
-    </div>
-
-
-    <div id="advertisementsByCategory"></div>
+    <div class="card-container" id="advertisementsByCategory"></div>
 
     <h2>Все Объявления</h2>
     <div class="card-container" id="allAdvertisements"></div>
 </div>
 
-<script>
-    const apiUrl = '/api/advertisements';
-    const categoriesUrl = '/api/advertisements/categories';
-    const currentUserUrl = '/api/advertisements/current-user';
-
-    let categories = [];
-    let currentUser = null;
-
-    // Функция для выхода пользователя
-    function logout() {
-        fetch('/api/auth/logout', {
-            method: 'POST'
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Вы успешно вышли из системы');
-                currentUser = null; // Сбрасываем информацию о текущем пользователе
-                updateButtons(); // Обновляем кнопки (скрываем "Редактировать" и "Удалить")
-                window.location.reload(); // Перезагружаем страницу для обновления интерфейса
-            } else {
-                alert('Ошибка при выходе из системы');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-            alert('Ошибка при выходе из системы');
-        });
-    }
-
-    function resetSearch() {
-        document.getElementById('advertisementsByCategory').innerHTML = ''; // Очищаем результаты
-        document.getElementById('resetSearchButton').style.display = 'none'; // Скрываем кнопку сброса
-    }
-
-
-    function updateButtons() {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        const adId = card.getAttribute('data-ad-id');
-        const adUserId = card.getAttribute('data-ad-user-id');
-        const editButton = card.querySelector('.edit-button');
-        const deleteButton = card.querySelector('.delete-button');
-
-        if (currentUser && (currentUser.role === 'Администратор' || currentUser.id == adUserId)) {
-            if (editButton) editButton.style.display = 'inline-block';
-            if (deleteButton) deleteButton.style.display = 'inline-block';
-        } else {
-            if (editButton) editButton.style.display = 'none';
-            if (deleteButton) deleteButton.style.display = 'none';
-        }
-    });
-}
-
-    // Загрузка информации о текущем пользователе
-    function loadCurrentUser() {
-        fetch(currentUserUrl)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Пользователь не авторизован');
-                }
-            })
-            .then(user => {
-                currentUser = user;
-                getAllAdvertisements();
-            })
-            .catch(error => {
-                console.error('Ошибка загрузки информации о пользователе:', error);
-                currentUser = null;
-                getAllAdvertisements();
-            });
-    }
-
-    // Загрузка категорий при загрузке страницы
-    function loadCategories() {
-        fetch(categoriesUrl)
-            .then(response => response.json())
-            .then(data => {
-                categories = data;
-                const categorySelect = document.getElementById('categorySelect');
-                const editCategorySelect = document.getElementById('editCategorySelect');
-                const categoryNameSelect = document.getElementById('categoryNameSelect');
-
-                // Очистка и заполнение выпадающих списков
-                [categorySelect, editCategorySelect, categoryNameSelect].forEach(select => {
-                    select.innerHTML = '<option value="">Выберите категорию</option>';
-                    data.forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category.id; // Используем ID категории
-                        option.textContent = category.title; // Отображаем название категории
-                        select.appendChild(option);
-                    });
-                });
-            })
-            .catch(error => console.error('Ошибка загрузки категорий:', error));
-    }
-
-    function toggleForm(formId) {
-        const form = document.getElementById(formId);
-        form.style.display = form.style.display === 'block' ? 'none' : 'block';
-        if (form.style.display === 'block') {
-            if (formId !== 'addAdvertisementForm') document.getElementById('addAdvertisementForm').style.display = 'none';
-            if (formId !== 'editAdvertisementForm') document.getElementById('editAdvertisementForm').style.display = 'none';
-            document.getElementById('searchCategoryContainer').style.display = 'none';
-        }
-    }
-
-    function toggleSearchForm() {
-        const searchContainer = document.getElementById('searchCategoryContainer');
-        searchContainer.style.display = searchContainer.style.display === 'block' ? 'none' : 'block';
-        if (searchContainer.style.display === 'block') {
-            document.getElementById('addAdvertisementForm').style.display = 'none';
-            document.getElementById('editAdvertisementForm').style.display = 'none';
-        }
-    }
-
-    // Добавление объявления
-    document.getElementById('addAdvertisementForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append('title', document.getElementById('title').value);
-        formData.append('idCategory', document.getElementById('categorySelect').value);
-        formData.append('description', document.getElementById('description').value);
-        formData.append('price', document.getElementById('price').value);
-        formData.append('photo', document.getElementById('photo').files[0]);
-
-        fetch(apiUrl, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.message || 'Ошибка при добавлении объявления'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert('Объявление добавлено: ' + JSON.stringify(data));
-            document.getElementById('addAdvertisementForm').reset();
-            document.getElementById('addAdvertisementForm').style.display = 'none';
-            getAllAdvertisements();
-        })
-        .catch(error => {
-            alert(error.message);
-            console.error('Ошибка:', error);
-        });
-    });
-
-    // Редактирование объявления
-    document.getElementById('editAdvertisementForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append('title', document.getElementById('editTitle').value);
-        formData.append('idCategory', document.getElementById('editCategorySelect').value);
-        formData.append('description', document.getElementById('editDescription').value);
-        formData.append('price', document.getElementById('editPrice').value);
-        if (document.getElementById('editPhoto').files[0]) {
-            formData.append('photo', document.getElementById('editPhoto').files[0]);
-        }
-
-        const id = document.getElementById('editId').value;
-
-        fetch(`${apiUrl}/${id}`, {
-            method: 'PUT',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.message || 'Ошибка при редактировании объявления'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert('Объявление обновлено: ' + JSON.stringify(data));
-            document.getElementById('editAdvertisementForm').reset();
-            document.getElementById('editAdvertisementForm').style.display = 'none';
-            getAllAdvertisements();
-        })
-        .catch(error => {
-            alert(error.message);
-            console.error('Ошибка:', error);
-        });
-    });
-
-    // Поиск по категории
-    document.getElementById('getByCategoryButton').addEventListener('click', function() {
-        const categoryName = document.getElementById('categoryNameSelect').options[document.getElementById('categoryNameSelect').selectedIndex].text;
-        fetch(`${apiUrl}/by-category?categoryName=${encodeURIComponent(categoryName)}`)
-            .then(response => response.json())
-            .then(data => {
-                const advertisementsByCategoryContainer = document.getElementById('advertisementsByCategory');
-                advertisementsByCategoryContainer.innerHTML = ''; // Очищаем контейнер
-                data.forEach(ad => {
-                    fetch(`${apiUrl}/photo/${ad.id}`)
-                        .then(response => response.text())
-                        .then(base64Image => {
-                            const card = document.createElement('div');
-                            card.className = 'card';
-                            card.setAttribute('data-ad-id', ad.id);
-                            card.setAttribute('data-ad-user-id', ad.idUsers.id);
-                            card.innerHTML = `
-                                <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
-                                <h3>${ad.title}</h3>
-                                <p>Цена: ${ad.price}₽</p>
-                                ${currentUser && (currentUser.role === 'Администратор' || currentUser.id === ad.idUsers.id) ? `
-                                    <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
-                                    <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
-                                ` : ''}
-                            `;
-                            advertisementsByCategoryContainer.appendChild(card);
-                            updateButtons(); // Обновляем кнопки, чтобы скрывать/показывать их в зависимости от прав пользователя
-                        })
-                        .catch(error => console.error('Ошибка загрузки изображения:', error));
-                });
-                document.getElementById('resetSearchButton').style.display = 'block'; // Показываем кнопку сброса
-            })
-            .catch(error => console.error('Ошибка:', error));
-    });
-
-
-
-
-    // Получение всех объявлений
-    function getAllAdvertisements() {
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                const allAdvertisementsContainer = document.getElementById('allAdvertisements');
-                allAdvertisementsContainer.innerHTML = '';
-                data.forEach(ad => {
-                    fetch(`${apiUrl}/photo/${ad.id}`)
-                        .then(response => response.text())
-                        .then(base64Image => {
-                            const card = document.createElement('div');
-                            card.className = 'card';
-                            card.innerHTML = `
-                                <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
-                                <h3>${ad.title}</h3>
-                                <p>Цена: ${ad.price}₽</p>
-                                ${currentUser && (currentUser.role === 'Администратор' || currentUser.id === ad.idUsers.id) ? `
-                                    <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
-                                    <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
-                                ` : ''}
-                            `;
-                            allAdvertisementsContainer.appendChild(card);
-                        })
-                        .catch(error => console.error('Ошибка загрузки изображения:', error));
-                });
-            })
-            .catch(error => console.error('Ошибка:', error));
-    }
-
-    // Редактирование объявления (заполнение формы)
-    function editAdvertisement(id) {
-        fetch(`${apiUrl}/${id}`)
-            .then(response => response.json())
-            .then(ad => {
-                document.getElementById('editId').value = ad.id;
-                document.getElementById('editTitle').value = ad.title;
-                document.getElementById('editCategorySelect').value = ad.idCategory.id;
-                document.getElementById('editDescription').value = ad.description;
-                document.getElementById('editPrice').value = ad.price;
-                toggleForm('editAdvertisementForm');
-            })
-            .catch(error => {
-                alert('Ошибка при загрузке данных объявления');
-                console.error('Ошибка:', error);
-            });
-    }
-
-    // Удаление объявления
-    function deleteAdvertisement(id) {
-        fetch(`${apiUrl}/${id}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.message || 'Ошибка при удалении объявления'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert('Объявление удалено: ' + JSON.stringify(data));
-            getAllAdvertisements();
-        })
-        .catch(error => {
-            alert(error.message);
-            console.error('Ошибка:', error);
-        });
-    }
-
-    window.onload = function() {
-        loadCategories();
-        loadCurrentUser();
-    };
-</script>
-
+<script src="js/ads.js"></script>
 </body>
 </html>
