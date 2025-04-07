@@ -179,9 +179,9 @@ function toggleForm(formId) {
     }
 }
 
-function toggleEditForm() {
+function toggleEditForm(formId) {
     const editContainer = document.getElementById('editAdvertisementForm');
-        editContainer.style.display = editContainer.style.display === 'block' ? 'none' : 'block';
+    editContainer.style.display = editContainer.style.display === 'block' ? 'none' : 'block';
 }
 
 // Переключаю поиск
@@ -323,6 +323,9 @@ document.getElementById('getByCategoryButton').addEventListener('click', async f
                             <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
                             <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
                         ` : ''}
+                        ${currentUser && currentUser.id !== ad.idUsers.id ? `
+                             <button onclick="addToCart(${ad.id})">В корзину</button>
+                        ` : ''}
                     `;
                     advertisementsByCategoryContainer.appendChild(card);
                     updateButtons();
@@ -363,7 +366,7 @@ function getAllAdvertisements() {
                                 <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
                             ` : ''}
                             ${currentUser && currentUser.id !== ad.idUsers.id ? `
-                                <button onclick="addToCart(${ad.id})">Добавить в корзину</button>
+                                <button onclick="addToCart(${ad.id})">В корзину</button>
                             ` : ''}
                         `;
                         allAdvertisementsContainer.appendChild(card);
@@ -447,7 +450,7 @@ function editAdvertisement(id) {
             document.getElementById('editCategorySelect').value = ad.idCategory.id;
             document.getElementById('editDescription').value = ad.description;
             document.getElementById('editPrice').value = ad.price;
-            toggleEditForm(); // Здесь вызываем правильную функцию
+            toggleEditForm();
         })
         .catch(error => {
             alert('Ошибка при загрузке данных объявления');

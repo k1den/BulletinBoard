@@ -167,4 +167,11 @@ public class AdvertisementService {
         // Возвращение сжатого изображения в виде массива байтов
         return byteArrayOutputStream.toByteArray();
     }
+
+    // В AdvertisementService добавьте этот метод
+    public boolean isAdOwner(Integer adId, Integer userId) {
+        Ads ad = adsRepository.findById(adId)
+                .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
+        return ad.getIdUsers().getId().equals(userId);
+    }
 }
