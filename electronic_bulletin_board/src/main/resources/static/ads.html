@@ -69,10 +69,26 @@
         <button type="submit">Сохранить изменения</button>
     </form>
 
+    <div id="commentFormContainer" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); z-index: 1001;">
+        <h3>Добавить комментарий</h3>
+        <input type="hidden" id="commentAdId">
+        <textarea id="commentText" placeholder="Ваш комментарий" style="width: 300px; height: 100px; margin-bottom: 10px;"></textarea>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="submitComment()">Отправить</button>
+            <button onclick="closeCommentForm()">Отмена</button>
+        </div>
+    </div>
+
     <div class="card-container" id="advertisementsByCategory"></div>
 
     <h2>Все Объявления</h2>
     <div class="card-container" id="allAdvertisements"></div>
+</div>
+
+<div id="commentModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); z-index: 1002;">
+    <h3>Комментарий</h3>
+    <p id="commentModalText"></p>
+    <button onclick="document.getElementById('commentModal').style.display = 'none'">OK</button>
 </div>
 
 <script src="js/ads.js"></script>

@@ -1,6 +1,237 @@
 const apiUrl = '/api/advertisements';
 const categoriesUrl = '/api/advertisements/categories';
 const currentUserUrl = '/api/advertisements/current-user';
+// Добавить в начало файла
+const commentsApiUrl = '/api/comments';
+
+// Функции для работы с комментариями
+let currentAdForComment = null;
+
+function showCommentForm(adId) {
+    document.getElementById('commentAdId').value = adId;
+    document.getElementById('commentFormContainer').style.display = 'block';
+}
+
+function closeCommentForm() {
+    document.getElementById('commentFormContainer').style.display = 'none';
+    currentAdForComment = null;
+}
+
+async function submitComment() {
+    const adId = document.getElementById('commentAdId').value;
+    const commentText = document.getElementById('commentText').value.trim();
+
+    if (!commentText) {
+        showError('Комментарий не может быть пустым');
+        return;
+    }
+
+    try {
+        const response = await fetch(commentsApiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                adsId: adId,
+                comment: commentText
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка при добавлении комментария');
+        }
+
+        showSuccess('Комментарий успешно добавлен');
+        document.getElementById('commentText').value = '';
+        closeCommentForm();
+        loadCommentsForAd(adId);
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+function createAdCard(ad, base64Image) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('data-ad-id', ad.id);
+    card.setAttribute('data-ad-user-id', ad.idUsers.id);
+
+    card.innerHTML = `
+        <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
+        <h3>${ad.title}</h3>
+        <p>Цена: ${formatPrice(ad.price)}</p>
+        <div class="buttons">
+            ${currentUser && (currentUser.role === 'Администратор' || currentUser.id === ad.idUsers.id) ? `
+                <button class="edit-button" onclick="editAdvertisement(${ad.id})">Редактировать</button>
+                <button class="delete-button" onclick="deleteAdvertisement(${ad.id})">Удалить</button>
+            ` : ''}
+            ${currentUser && currentUser.id !== ad.idUsers.id ? `
+                <button onclick="addToCart(${ad.id})">В корзину</button>
+                <button class="comment-button" onclick="showCommentForm(${ad.id})">Добавить комментарий</button>
+            ` : ''}
+        </div>
+        <div class="comment-preview" style="display: none;"></div>
+        <div class="comment-container" style="display: none;"></div>
+    `;
+
+    card.addEventListener('mouseenter', () => {
+        loadCommentsForAd(ad.id);
+        card.querySelector('.comment-preview').style.display = 'block';
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.querySelector('.comment-preview').style.display = 'none';
+    });
+
+    return card;
+}
+
+async function loadCommentsForAd(adId) {
+    try {
+        const response = await fetch(`${commentsApiUrl}/ad/${adId}`);
+        const comments = await response.json();
+        updateCommentUI(adId, comments);
+    } catch (error) {
+        console.error('Ошибка загрузки комментариев:', error);
+    }
+}
+
+function updateCommentUI(adId, comments) {
+    const card = document.querySelector(`.card[data-ad-id="${adId}"]`);
+    if (!card) return;
+
+    const commentButton = card.querySelector('.comment-button');
+    const commentContainer = card.querySelector('.comment-container');
+    const commentPreview = card.querySelector('.comment-preview');
+
+    // Очищаем контейнер
+    if (commentContainer) {
+        commentContainer.innerHTML = '';
+    }
+
+    // Проверяем, есть ли комментарий текущего пользователя
+    const userComment = currentUser ? comments.find(comment => comment.idUsers.id === currentUser.id) : null;
+
+    if (userComment) {
+        // Если есть комментарий пользователя, скрываем кнопку добавления и показываем кнопки управления
+        if (commentButton) commentButton.style.display = 'none';
+
+        // Создаем контейнер для кнопок управления комментарием
+        const commentControls = document.createElement('div');
+        commentControls.className = 'comment-controls';
+        commentControls.innerHTML = `
+            <button class="view-comment-button" onclick="viewComment(${userComment.id}, '${escapeHtml(userComment.text)}')">Посмотреть комментарий</button>
+            <button class="delete-comment-button" onclick="deleteComment(${userComment.id}, ${adId})">Удалить комментарий</button>
+        `;
+
+        // Добавляем кнопки управления в контейнер комментариев
+        if (commentContainer) {
+            commentContainer.appendChild(commentControls);
+        } else {
+            const newCommentContainer = document.createElement('div');
+            newCommentContainer.className = 'comment-container';
+            newCommentContainer.appendChild(commentControls);
+            card.appendChild(newCommentContainer);
+        }
+    } else {
+        // Если нет комментария пользователя, показываем кнопку добавления
+        if (commentButton) commentButton.style.display = 'inline-block';
+
+        // Удаляем кнопки управления, если они есть
+        const existingControls = card.querySelector('.comment-controls');
+        if (existingControls) {
+            existingControls.remove();
+        }
+    }
+
+    // Обновляем превью комментариев
+    if (commentPreview) {
+        if (comments.length > 0) {
+            const previewText = comments.length === 1 ?
+                `1 комментарий` :
+                `${comments.length} комментариев`;
+            commentPreview.innerHTML = `<p>${previewText}</p>`;
+        } else {
+            commentPreview.innerHTML = '<p>Нет комментариев</p>';
+        }
+    }
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function viewComment(commentId, commentText) {
+    document.getElementById('commentModalText').textContent = commentText;
+    document.getElementById('commentModal').style.display = 'block';
+}
+
+function updateCommentButtons(adId, comments) {
+    const card = document.querySelector(`.card[data-ad-id="${adId}"]`);
+    if (!card) return;
+
+    const commentButton = card.querySelector('.comment-button');
+    if (!commentButton) return;
+
+    const hasUserComment = currentUser && comments.some(comment => comment.idUsers.id === currentUser.id);
+
+    if (hasUserComment) {
+        commentButton.remove();
+    }
+}
+
+async function editComment(commentId, currentText) {
+    const newText = prompt('Редактировать комментарий:', currentText);
+    if (newText === null || newText.trim() === currentText.trim()) return;
+
+    try {
+        const response = await fetch(`${commentsApiUrl}/${commentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: newText
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка при редактировании комментария');
+        }
+
+        showSuccess('Комментарий успешно обновлен');
+        // Перезагружаем комментарии для объявления
+        const comment = await response.json();
+        loadCommentsForAd(comment.adsId);
+    } catch (error) {
+        showError(error.message);
+    }
+}
+
+async function deleteComment(commentId, adId) {
+    if (!confirm('Вы уверены, что хотите удалить этот комментарий?')) return;
+
+    try {
+        const response = await fetch(`${commentsApiUrl}/${commentId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка при удалении комментария');
+        }
+
+        showSuccess('Комментарий успешно удален');
+        loadCommentsForAd(adId);
+    } catch (error) {
+        showError(error.message);
+    }
+}
 
 let categories = [];
 let currentUser = null;
@@ -117,13 +348,18 @@ function loadCurrentUser() {
         })
         .then(user => {
             currentUser = user;
-            updateAuthButtons(); // Обновляем кнопки
+            updateAuthButtons();
             getAllAdvertisements();
+            // Загружаем комментарии для всех объявлений
+            document.querySelectorAll('.card').forEach(card => {
+                const adId = card.getAttribute('data-ad-id');
+                loadCommentsForAd(adId);
+            });
         })
         .catch(error => {
             console.error('Ошибка загрузки информации о пользователе:', error);
             currentUser = null;
-            updateAuthButtons(); // Обновляем кнопки
+            updateAuthButtons();
             getAllAdvertisements();
         });
 }
@@ -311,22 +547,7 @@ document.getElementById('getByCategoryButton').addEventListener('click', async f
             fetch(`${apiUrl}/photo/${ad.id}`)
                 .then(response => response.text())
                 .then(base64Image => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.setAttribute('data-ad-id', ad.id);
-                    card.setAttribute('data-ad-user-id', ad.idUsers.id);
-                    card.innerHTML = `
-                        <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
-                        <h3>${ad.title}</h3>
-                        <p>Цена: ${formatPrice(ad.price)}</p> <!-- Форматируем цену -->
-                        ${currentUser  && (currentUser .role === 'Администратор' || currentUser .id === ad.idUsers.id) ? `
-                            <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
-                            <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
-                        ` : ''}
-                        ${currentUser && currentUser.id !== ad.idUsers.id ? `
-                             <button onclick="addToCart(${ad.id})">В корзину</button>
-                        ` : ''}
-                    `;
+                    const card = createAdCard(ad, base64Image);
                     advertisementsByCategoryContainer.appendChild(card);
                     updateButtons();
                 })
@@ -353,29 +574,16 @@ function getAllAdvertisements() {
                 fetch(`${apiUrl}/photo/${ad.id}`)
                     .then(response => response.text())
                     .then(base64Image => {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.setAttribute('data-ad-id', ad.id);
-                        card.setAttribute('data-ad-user-id', ad.idUsers.id);
-                        card.innerHTML = `
-                            <img src="data:image/jpeg;base64,${base64Image}" alt="${ad.title}">
-                            <h3>${ad.title}</h3>
-                            <p>Цена: ${formatPrice(ad.price)}</p>
-                            ${currentUser && (currentUser.role === 'Администратор' || currentUser.id === ad.idUsers.id) ? `
-                                <button onclick="editAdvertisement(${ad.id})">Редактировать</button>
-                                <button onclick="deleteAdvertisement(${ad.id})">Удалить</button>
-                            ` : ''}
-                            ${currentUser && currentUser.id !== ad.idUsers.id ? `
-                                <button onclick="addToCart(${ad.id})">В корзину</button>
-                            ` : ''}
-                        `;
+                        const card = createAdCard(ad, base64Image);
                         allAdvertisementsContainer.appendChild(card);
+                        updateButtons();
                     })
                     .catch(error => console.error('Ошибка загрузки изображения:', error));
             });
         })
         .catch(error => console.error('Ошибка:', error));
 }
+
 function getCartId() {
     return fetch('/api/cart/cartId')
         .then(response => {

@@ -17,14 +17,14 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private AuthService authService; // Добавляем AuthService
+    private AuthService authService;
 
     @Autowired
-    private UserRepository userRepository; // Добавляем UserRepository
+    private UserRepository userRepository;
 
     // Создание новой категории
     public Categories createCategory(String title, Integer parentCategoryId) {
-        checkAdminRole(); // Проверяем, что пользователь - администратор
+        checkAdminRole();
 
         Categories category = new Categories();
         category.setTitle(title);
@@ -55,7 +55,7 @@ public class CategoryService {
 
     // Удаление категории
     public void deleteCategory(Integer id) {
-        checkAdminRole(); // Проверяем, что пользователь - администратор
+        checkAdminRole();
         categoryRepository.deleteById(id);
     }
 
@@ -65,11 +65,9 @@ public class CategoryService {
             throw new RuntimeException("Пользователь не вошел в систему");
         }
 
-        // Получаем текущего пользователя
         String currentLogin = authService.getCurrentLogin();
         Users user = userRepository.findByLogin(currentLogin);
 
-        // Проверяем роль пользователя
         if (!"Администратор".equals(user.getRole())) {
             throw new RuntimeException("Доступ запрещен: у вас недостаточно прав");
         }
