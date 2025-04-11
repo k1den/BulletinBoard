@@ -78,16 +78,6 @@ public class CommentsService {
         return commentsRepository.save(comment);
     }
 
-    // Получение комментариев к объявлению
-    public List<Comments> getCommentsByAd(Integer adsId) {
-        return commentsRepository.findByAdsId(adsId);
-    }
-
-    // Получение комментариев пользователя
-    public List<Comments> getUserComments(Integer userId) {
-        return commentsRepository.findByUserId(userId);
-    }
-
     private void checkUserLoggedIn() {
         if (!authService.isSessionActive()) {
             throw new RuntimeException("Пользователь не вошел в систему");
@@ -97,5 +87,12 @@ public class CommentsService {
     private Users getCurrentUser() {
         String currentLogin = authService.getCurrentLogin();
         return userRepository.findByLogin(currentLogin);
+    }
+
+    // CommentsService.java
+    public List<Comments> getCurrentUserComments() {
+        checkUserLoggedIn();
+        Users user = getCurrentUser();
+        return commentsRepository.findByUserId(user.getId());
     }
 }

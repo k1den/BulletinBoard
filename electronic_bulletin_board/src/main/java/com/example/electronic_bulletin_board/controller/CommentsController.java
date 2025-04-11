@@ -77,29 +77,19 @@ public class CommentsController {
         }
     }
 
-    @GetMapping("/ad/{adsId}")
-    @Operation(summary = "Получить комментарии к объявлению", description = "Возвращает список комментариев для указанного объявления")
+    // CommentsController.java
+    @GetMapping("/my-comments")
+    @Operation(summary = "Получить мои комментарии", description = "Возвращает список комментариев текущего пользователя")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список комментариев успешно получен"),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено")
+            @ApiResponse(responseCode = "403", description = "Пользователь не авторизован")
     })
-    public ResponseEntity<List<Comments>> getCommentsByAd(
-            @Parameter(description = "ID объявления", example = "1", required = true)
-            @PathVariable Integer adsId) {
-        List<Comments> comments = commentsService.getCommentsByAd(adsId);
-        return ResponseEntity.ok(comments);
-    }
-
-    @GetMapping("/user/{userId}")
-    @Operation(summary = "Получить комментарии пользователя", description = "Возвращает список комментариев указанного пользователя")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Список комментариев пользователя успешно получен"),
-            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
-    })
-    public ResponseEntity<List<Comments>> getUserComments(
-            @Parameter(description = "ID пользователя", example = "1", required = true)
-            @PathVariable Integer userId) {
-        List<Comments> userComments = commentsService.getUserComments(userId);
-        return ResponseEntity.ok(userComments);
+    public ResponseEntity<List<Comments>> getCurrentUserComments() {
+        try {
+            List<Comments> userComments = commentsService.getCurrentUserComments();
+            return ResponseEntity.ok(userComments);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
     }
 }
