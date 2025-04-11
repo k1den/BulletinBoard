@@ -16,7 +16,7 @@ body {
     width: 300px;
 }
 
-.container h2 {
+.container h2, .container h3 {
     margin-bottom: 20px;
     font-size: 24px;
     text-align: center;
@@ -41,10 +41,28 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 10px;
 }
 
 .container button:hover {
     background: linear-gradient(135deg, #2575fc, #6a11cb);
+    transform: translateY(-1px);
+}
+
+.container button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.container button.secondary-button {
+    background: #ffffff;
+    color: #2575fc;
+    border: 1px solid #2575fc;
+}
+
+.container button.secondary-button:hover {
+    background: #f0f7ff;
 }
 
 .container a {
@@ -73,4 +91,25 @@ body {
 
 #errorMessage {
     font-weight: bold;
+}
+
+#verificationForm p {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#emailDisplay {
+    font-weight: bold;
+    color: #2575fc;
+}
+
+#timerContainer {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+#timer {
+    font-weight: bold;
+    color: #2575fc;
 }

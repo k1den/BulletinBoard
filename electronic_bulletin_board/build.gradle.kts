@@ -27,6 +27,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok:1.18.30")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
 	implementation("org.springframework.security:spring-security-crypto:5.7.1")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 }
 
 tasks.withType<Test> {

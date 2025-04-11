@@ -40,7 +40,6 @@ function loadCartItems() {
             let totalPrice = 0; // Переменная для хранения общей стоимости
 
             data.forEach(item => {
-                // Загружаем фотографию для каждого товара
                 fetch(`${apiUrl}/photo/${item.ad.id}`)
                     .then(response => response.text())
                     .then(base64Image => {
@@ -54,13 +53,11 @@ function loadCartItems() {
                         `;
                         cartItemsContainer.appendChild(card);
 
-                        // Добавляем цену товара к общей сумме
                         totalPrice += item.ad.price;
-                        updateTotalPrice(totalPrice); // Обновляем отображение общей суммы
+                        updateTotalPrice(totalPrice);
                     })
                     .catch(error => {
                         console.error('Ошибка загрузки изображения:', error);
-                        // Если изображение не загружено, отображаем карточку без изображения
                         const card = document.createElement('div');
                         card.className = 'card';
                         card.innerHTML = `
@@ -70,9 +67,8 @@ function loadCartItems() {
                         `;
                         cartItemsContainer.appendChild(card);
 
-                        // Добавляем цену товара к общей сумме
                         totalPrice += item.ad.price;
-                        updateTotalPrice(totalPrice); // Обновляем отображение общей суммы
+                        updateTotalPrice(totalPrice);
                     });
             });
         })
@@ -98,7 +94,7 @@ function getCartId() {
             }
         })
         .then(data => {
-            return data; // data будет содержать cartId
+            return data;
         })
         .catch(error => {
             console.error('Ошибка:', error);
@@ -115,7 +111,7 @@ function removeFromCart(itemId) {
         .then(response => {
             if (response.ok) {
                 showSuccess('Товар успешно удален из корзины!');
-                loadCartItems(); // Перезагружаем список товаров в корзине
+                loadCartItems();
             } else {
                 throw new Error('Ошибка при удалении товара из корзины');
             }

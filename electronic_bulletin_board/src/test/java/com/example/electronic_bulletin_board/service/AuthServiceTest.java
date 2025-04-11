@@ -2,7 +2,7 @@ package com.example.electronic_bulletin_board.service;
 
 import com.example.electronic_bulletin_board.dto.LoginRequest;
 import com.example.electronic_bulletin_board.dto.RegisterRequest;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

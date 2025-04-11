@@ -1,9 +1,9 @@
 package com.example.electronic_bulletin_board.controller;
 
 import com.example.electronic_bulletin_board.dto.AdvertisementDto;
-import com.example.electronic_bulletin_board.model.Ads;
-import com.example.electronic_bulletin_board.model.Categories;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Ads;
+import com.example.electronic_bulletin_board.entity.Categories;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.CategoryRepository;
 import com.example.electronic_bulletin_board.service.AdvertisementService;
 import com.example.electronic_bulletin_board.service.AuthService;

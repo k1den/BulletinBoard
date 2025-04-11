@@ -1,9 +1,9 @@
 package com.example.electronic_bulletin_board.service;
 
 import com.example.electronic_bulletin_board.dto.CommentDto;
-import com.example.electronic_bulletin_board.model.Ads;
-import com.example.electronic_bulletin_board.model.Comments;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Ads;
+import com.example.electronic_bulletin_board.entity.Comments;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.AdvertisementRepository;
 import com.example.electronic_bulletin_board.repository.CommentsRepository;
 import com.example.electronic_bulletin_board.repository.UserRepository;

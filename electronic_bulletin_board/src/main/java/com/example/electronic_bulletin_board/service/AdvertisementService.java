@@ -1,9 +1,9 @@
 package com.example.electronic_bulletin_board.service;
 
 import com.example.electronic_bulletin_board.dto.AdvertisementDto;
-import com.example.electronic_bulletin_board.model.Ads;
-import com.example.electronic_bulletin_board.model.Categories;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Ads;
+import com.example.electronic_bulletin_board.entity.Categories;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.AdvertisementRepository;
 import com.example.electronic_bulletin_board.repository.CategoryRepository;
 import com.example.electronic_bulletin_board.repository.UserRepository;
@@ -19,7 +19,6 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -56,7 +55,7 @@ public class AdvertisementService {
         ads.setDate(new Date());
         ads.setPhoto(advertisementDto.getPhoto());
 
-        // Устанавливаем категорию по id
+        // Значение категорию по id
         Categories category = categoriesRepository.findById(advertisementDto.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
         ads.setIdCategory(category);
@@ -68,14 +67,14 @@ public class AdvertisementService {
 
     // Удаление объявления
     public void deleteAdvertisement(Integer id) {
-        checkUserLoggedIn(); // Проверяем, вошел ли пользователь в систему
+        checkUserLoggedIn(); // Вошел ли пользователь в систему
 
         Ads ads = adsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
 
-        Users currentUser = getCurrentUser(); // Получаем текущего пользователя
+        Users currentUser = getCurrentUser(); // Получение текущего пользователя
 
-        // Проверяем права доступа
+        // Проверка прав доступа
         if (!currentUser.getRole().equals("Администратор") && !ads.getIdUsers().getId().equals(currentUser.getId())) {
             throw new RuntimeException("Вы не можете удалить это объявление");
         }
@@ -85,14 +84,14 @@ public class AdvertisementService {
 
     // Обновление объявления
     public Ads updateAdvertisement(Integer id, AdvertisementDto advertisementDto) {
-        checkUserLoggedIn(); // Проверяем, вошел ли пользователь в систему
+        checkUserLoggedIn(); // Вошел ли пользователь в систему
 
         Ads existingAds = adsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
 
-        Users currentUser = getCurrentUser(); // Получаем текущего пользователя
+        Users currentUser = getCurrentUser(); // Получение текущего пользователя
 
-        // Проверяем права доступа
+        // Проверка права доступа
         if (!currentUser.getRole().equals("Администратор") && !existingAds.getIdUsers().getId().equals(currentUser.getId())) {
             throw new RuntimeException("Вы не можете редактировать это объявление");
         }
@@ -100,7 +99,7 @@ public class AdvertisementService {
         existingAds.setTitle(advertisementDto.getTitle());
         existingAds.setDescription(advertisementDto.getDescription());
         existingAds.setPrice(advertisementDto.getPrice());
-        existingAds.setPhoto(advertisementDto.getPhoto()); // Обновляем изображение
+        existingAds.setPhoto(advertisementDto.getPhoto()); // Обновление изображения
 
         Categories category = categoriesRepository.findById(advertisementDto.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));

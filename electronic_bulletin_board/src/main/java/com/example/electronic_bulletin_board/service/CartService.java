@@ -1,12 +1,11 @@
 package com.example.electronic_bulletin_board.service;
 
-import com.example.electronic_bulletin_board.model.Ads;
-import com.example.electronic_bulletin_board.model.Cart;
-import com.example.electronic_bulletin_board.model.CartItem;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Ads;
+import com.example.electronic_bulletin_board.entity.Cart;
+import com.example.electronic_bulletin_board.entity.CartItem;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.CartItemRepository;
 import com.example.electronic_bulletin_board.repository.CartRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class CartService {
 
         Cart existingCart = cartRepository.findByUserId(currentUser ).orElse(null);
         if (existingCart != null) {
-            return existingCart; // или выбросьте исключение, если хотите
+            return existingCart;
         }
 
         Cart cart = new Cart();

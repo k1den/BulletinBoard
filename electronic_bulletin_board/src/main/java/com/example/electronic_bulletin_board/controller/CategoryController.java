@@ -1,6 +1,6 @@
 package com.example.electronic_bulletin_board.controller;
 
-import com.example.electronic_bulletin_board.model.Categories;
+import com.example.electronic_bulletin_board.entity.Categories;
 import com.example.electronic_bulletin_board.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

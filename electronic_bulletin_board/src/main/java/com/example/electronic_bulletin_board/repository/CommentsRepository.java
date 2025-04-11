@@ -1,6 +1,6 @@
 package com.example.electronic_bulletin_board.repository;
 
-import com.example.electronic_bulletin_board.model.Comments;
+import com.example.electronic_bulletin_board.entity.Comments;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

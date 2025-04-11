@@ -1,4 +1,4 @@
-package com.example.electronic_bulletin_board.model;
+package com.example.electronic_bulletin_board.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

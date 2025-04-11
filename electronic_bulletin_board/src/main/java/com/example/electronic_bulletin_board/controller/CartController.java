@@ -1,8 +1,8 @@
 package com.example.electronic_bulletin_board.controller;
 
-import com.example.electronic_bulletin_board.model.Cart;
-import com.example.electronic_bulletin_board.model.CartItem;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Cart;
+import com.example.electronic_bulletin_board.entity.CartItem;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.CartRepository;
 import com.example.electronic_bulletin_board.service.AdvertisementService;
 import com.example.electronic_bulletin_board.service.CartService;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

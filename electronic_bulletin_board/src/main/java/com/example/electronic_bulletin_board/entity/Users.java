@@ -1,4 +1,4 @@
-package com.example.electronic_bulletin_board.model;
+package com.example.electronic_bulletin_board.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

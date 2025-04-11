@@ -1,10 +1,8 @@
 const apiUrl = '/api/advertisements';
 const categoriesUrl = '/api/advertisements/categories';
 const currentUserUrl = '/api/advertisements/current-user';
-// Добавить в начало файла
 const commentsApiUrl = '/api/comments';
 
-// Функции для работы с комментариями
 let currentAdForComment = null;
 
 function showCommentForm(adId) {
@@ -105,19 +103,19 @@ function updateCommentUI(adId, comments) {
     const commentContainer = card.querySelector('.comment-container');
     const commentPreview = card.querySelector('.comment-preview');
 
-    // Очищаем контейнер
+    // Очистка контейнера
     if (commentContainer) {
         commentContainer.innerHTML = '';
     }
 
-    // Проверяем, есть ли комментарий текущего пользователя
+    // Проверка, есть ли комментарий текущего пользователя
     const userComment = currentUser ? comments.find(comment => comment.idUsers.id === currentUser.id) : null;
 
     if (userComment) {
-        // Если есть комментарий пользователя, скрываем кнопку добавления и показываем кнопки управления
+        // Если есть комментарий пользователя, скрываю кнопку добавления и показываю кнопки управления
         if (commentButton) commentButton.style.display = 'none';
 
-        // Создаем контейнер для кнопок управления комментарием
+        // Создаю контейнер для кнопок управления комментарием
         const commentControls = document.createElement('div');
         commentControls.className = 'comment-controls';
         commentControls.innerHTML = `
@@ -125,7 +123,7 @@ function updateCommentUI(adId, comments) {
             <button class="delete-comment-button" onclick="deleteComment(${userComment.id}, ${adId})">Удалить комментарий</button>
         `;
 
-        // Добавляем кнопки управления в контейнер комментариев
+        // Добавляю кнопки управления в контейнер комментариев
         if (commentContainer) {
             commentContainer.appendChild(commentControls);
         } else {
@@ -135,17 +133,17 @@ function updateCommentUI(adId, comments) {
             card.appendChild(newCommentContainer);
         }
     } else {
-        // Если нет комментария пользователя, показываем кнопку добавления
+        // Если нет комментария пользователя, показываю кнопку добавления
         if (commentButton) commentButton.style.display = 'inline-block';
 
-        // Удаляем кнопки управления, если они есть
+        // Удаляю кнопки управления, если они есть
         const existingControls = card.querySelector('.comment-controls');
         if (existingControls) {
             existingControls.remove();
         }
     }
 
-    // Обновляем превью комментариев
+    // Обновляю превью комментариев
     if (commentPreview) {
         if (comments.length > 0) {
             const previewText = comments.length === 1 ?
@@ -206,7 +204,7 @@ async function editComment(commentId, currentText) {
         }
 
         showSuccess('Комментарий успешно обновлен');
-        // Перезагружаем комментарии для объявления
+        // Перезагружаю комментарии для объявления
         const comment = await response.json();
         loadCommentsForAd(comment.adsId);
     } catch (error) {
@@ -250,7 +248,7 @@ function logout() {
         localStorage.removeItem('cartId');
         currentUser = null;
         updateAuthButtons();
-        updateButtons(); // Обновляем кнопки после выхода
+        updateButtons();
         window.location.href = 'ads.html';
     })
     .catch(error => {
@@ -264,7 +262,7 @@ function validateTitle(title) {
     if (title.length > 50) {
         return 'Название не должно превышать 50 символов.';
     }
-    return null; // Ошибок нет
+    return null;
 }
 
 // Валидация цены
@@ -313,8 +311,8 @@ function hideSuccess() {
 
 // Сброс поиска
 function resetSearch() {
-    document.getElementById('advertisementsByCategory').innerHTML = ''; // Очищаем результаты
-    document.getElementById('resetSearchButton').style.display = 'none'; // Скрываем кнопку сброса
+    document.getElementById('advertisementsByCategory').innerHTML = '';
+    document.getElementById('resetSearchButton').style.display = 'none';
 }
 
 // Обновляю кнопки
@@ -350,7 +348,6 @@ function loadCurrentUser() {
             currentUser = user;
             updateAuthButtons();
             getAllAdvertisements();
-            // Загружаем комментарии для всех объявлений
             document.querySelectorAll('.card').forEach(card => {
                 const adId = card.getAttribute('data-ad-id');
                 loadCommentsForAd(adId);
@@ -370,11 +367,11 @@ function updateAuthButtons() {
     const logoutButton = document.getElementById('logoutButton');
 
     if (currentUser) {
-        // Если пользователь авторизован, показываем кнопку "Выйти"
+        // Если пользователь авторизован, показываю кнопку "Выйти"
         loginButton.style.display = 'none';
         logoutButton.style.display = 'inline-block';
     } else {
-        // Если пользователь не авторизован, показываем кнопку "Войти"
+        // Если пользователь не авторизован, показываю кнопку "Войти"
         loginButton.style.display = 'inline-block';
         logoutButton.style.display = 'none';
     }
@@ -433,7 +430,7 @@ function toggleSearchForm() {
 // Универсальная функция для обработки ответа от сервера
 async function handleResponse(response) {
     if (!response.ok) {
-        // Пытаемся прочитать ошибку как JSON, если не получается — как текст
+        // Пытаюсь прочитать ошибку как JSON, если не получается - как текст
         const errorText = await response.text();
         try {
             const errorJson = JSON.parse(errorText);
@@ -594,7 +591,7 @@ function getCartId() {
             }
         })
         .then(data => {
-            return data; // data будет содержать cartId
+            return data;
         })
         .catch(error => {
             console.error('Ошибка:', error);
@@ -603,17 +600,17 @@ function getCartId() {
 }
 
 function addToCart(adId) {
-    // Сначала проверяем, есть ли у пользователя корзина
+    // Сначала проверю, есть ли у пользователя корзина
     getCartId()
         .then(cartId => {
-            // Если корзина есть, добавляем товар
+            // Если корзина есть, добавляю товар
             console.log('Корзина найдена, cartId:', cartId);
             return fetch(`/api/cart/${cartId}/add/${adId}`, {
                 method: 'POST'
             });
         })
         .catch(error => {
-            // Если корзины нет, создаем её
+            // Если корзины нет, создаю её
             console.log('Корзина не найдена, создаем новую...');
             return fetch('/api/cart/create', {
                 method: 'POST'
@@ -626,7 +623,7 @@ function addToCart(adId) {
             })
             .then(cart => {
                 console.log('Корзина создана, cartId:', cart.id);
-                // После создания корзины добавляем товар
+                // После создания корзины добавляю товар
                 return fetch(`/api/cart/${cart.id}/add/${adId}`, {
                     method: 'POST'
                 });
@@ -710,5 +707,5 @@ function toggleSearchForm() {
 window.onload = function() {
     loadCategories();
     loadCurrentUser();
-    updateAuthButtons(); // Обновляем кнопки при загрузке страницы
+    updateAuthButtons();
 };

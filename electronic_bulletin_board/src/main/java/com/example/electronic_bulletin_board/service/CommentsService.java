@@ -1,9 +1,9 @@
 package com.example.electronic_bulletin_board.service;
 
 import com.example.electronic_bulletin_board.dto.CommentDto;
-import com.example.electronic_bulletin_board.model.Ads;
-import com.example.electronic_bulletin_board.model.Comments;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Ads;
+import com.example.electronic_bulletin_board.entity.Comments;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.AdvertisementRepository;
 import com.example.electronic_bulletin_board.repository.CommentsRepository;
 import com.example.electronic_bulletin_board.repository.UserRepository;
@@ -34,7 +34,7 @@ public class CommentsService {
         Ads ads = adsRepository.findById(commentDto.getAdsId())
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
 
-        // Проверяем, что пользователь не комментирует свое объявление
+        // Проверка, что пользователь не комментирует свое объявление
         if (ads.getIdUsers().getId().equals(user.getId())) {
             throw new RuntimeException("Вы не можете комментировать свое объявление");
         }
@@ -54,7 +54,7 @@ public class CommentsService {
         Comments comment = commentsRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Комментарий не найден"));
 
-        // Проверяем права: может удалить автор комментария или администратор
+        // Проверка прав: может удалить автор комментария или администратор
         if (!user.getRole().equals("Администратор") && !comment.getUser().getId().equals(user.getId())) {
             throw new RuntimeException("Вы не можете удалить этот комментарий");
         }
@@ -69,7 +69,7 @@ public class CommentsService {
         Comments comment = commentsRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Комментарий не найден"));
 
-        // Проверяем, что пользователь является автором комментария
+        // Проверка, что пользователь является автором комментария
         if (!comment.getUser().getId().equals(user.getId())) {
             throw new RuntimeException("Вы не можете редактировать этот комментарий");
         }

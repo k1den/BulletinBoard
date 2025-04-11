@@ -38,7 +38,7 @@ public class AuthValidator {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
             return true;
         }
-        // Проверяем длину номера телефона
+        // Проверка длины номера телефона
         if (phoneNumber.length() != 12) {
             return false;
         }

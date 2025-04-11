@@ -12,13 +12,27 @@
     <div id="errorContainer">
         <span id="errorMessage"></span>
     </div>
-    <input type="email" id="email" placeholder="Email">
-    <input type="text" id="phone" placeholder="Телефон (необязательно)">
-    <input type="text" id="login" placeholder="Логин">
-    <input type="password" id="password" placeholder="Пароль">
-    <input type="password" id="confirmPassword" placeholder="Подтвердите пароль">
-    <button onclick="register()">Зарегистрироваться</button>
-    <a href="login.html">Уже есть аккаунт? Войдите</a>
+
+    <div id="registrationForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="phone" placeholder="Телефон (необязательно)">
+        <input type="text" id="login" placeholder="Логин" required>
+        <input type="password" id="password" placeholder="Пароль" required>
+        <input type="password" id="confirmPassword" placeholder="Подтвердите пароль" required>
+        <button onclick="startRegistration()">Зарегистрироваться</button>
+        <a href="login.html">Уже есть аккаунт? Войдите</a>
+    </div>
+
+    <div id="verificationForm" style="display: none;">
+        <h3>Подтверждение email</h3>
+        <p>На вашу почту <span id="emailDisplay"></span> отправлен код подтверждения</p>
+        <input type="text" id="verificationCode" placeholder="Введите код подтверждения" maxlength="6">
+        <button onclick="verifyCode()">Подтвердить</button>
+        <button onclick="resendCode()" class="secondary-button">Отправить код повторно</button>
+        <div id="timerContainer" style="margin-top: 10px;">
+            Можно отправить код повторно через: <span id="timer">60</span> сек.
+        </div>
+    </div>
 </div>
 
 <script src="js/register.js"></script>

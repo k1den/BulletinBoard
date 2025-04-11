@@ -1,12 +1,11 @@
 package com.example.electronic_bulletin_board.service;
 
-import com.example.electronic_bulletin_board.model.Ads;
-import com.example.electronic_bulletin_board.model.Cart;
-import com.example.electronic_bulletin_board.model.CartItem;
-import com.example.electronic_bulletin_board.model.Users;
+import com.example.electronic_bulletin_board.entity.Ads;
+import com.example.electronic_bulletin_board.entity.Cart;
+import com.example.electronic_bulletin_board.entity.CartItem;
+import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.CartItemRepository;
 import com.example.electronic_bulletin_board.repository.CartRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

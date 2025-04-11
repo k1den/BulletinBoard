@@ -1,11 +1,10 @@
-package com.example.electronic_bulletin_board.model;
+package com.example.electronic_bulletin_board.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.Date;
 
 @Data
