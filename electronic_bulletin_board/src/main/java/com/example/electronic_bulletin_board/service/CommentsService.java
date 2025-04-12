@@ -89,7 +89,6 @@ public class CommentsService {
         return userRepository.findByLogin(currentLogin);
     }
 
-    // CommentsService.java
     public List<Comments> getCurrentUserComments() {
         checkUserLoggedIn();
         Users user = getCurrentUser();

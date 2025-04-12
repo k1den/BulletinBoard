@@ -77,7 +77,6 @@ public class CommentsController {
         }
     }
 
-    // CommentsController.java
     @GetMapping("/my-comments")
     @Operation(summary = "Получить мои комментарии", description = "Возвращает список комментариев текущего пользователя")
     @ApiResponses(value = {
