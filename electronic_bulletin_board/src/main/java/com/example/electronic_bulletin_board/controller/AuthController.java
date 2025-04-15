@@ -3,13 +3,9 @@ package com.example.electronic_bulletin_board.controller;
 import com.example.electronic_bulletin_board.config.JwtUtils;
 import com.example.electronic_bulletin_board.dto.*;
 import com.example.electronic_bulletin_board.entity.Users;
-import com.example.electronic_bulletin_board.generator.VerificationCodeGenerator;
 import com.example.electronic_bulletin_board.repository.UserRepository;
 import com.example.electronic_bulletin_board.service.AuthService;
-import com.example.electronic_bulletin_board.service.EmailService;
 import com.example.electronic_bulletin_board.service.UserDetailsServiceImpl;
-import com.example.electronic_bulletin_board.service.VerificationService;
-import com.example.electronic_bulletin_board.validators.AuthValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -36,8 +31,6 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-    private final EmailService emailService;
-    private final VerificationService verificationService;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -90,50 +83,6 @@ public class AuthController {
         return ResponseEntity.ok("Пользователь успешно вышел из системы");
     }
 
-    @PostMapping("/send-verification")
-    public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String verificationCode = VerificationCodeGenerator.generateVerificationCode();
-
-        authService.saveVerificationCode(email, verificationCode);
-
-        emailService.sendVerificationEmail(email, verificationCode);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/verify-code")
-    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String code = request.get("code");
-
-        boolean isVerified = verificationService.verifyCode(email, code);
-
-        if (isVerified) {
-            return ResponseEntity.ok().body(Collections.singletonMap("success", true));
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Collections.singletonMap("message", "Неверный код подтверждения"));
-        }
-    }
-
-    @PostMapping("/resend-verification")
-    public ResponseEntity<?> resendVerification(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String newCode = VerificationCodeGenerator.generateVerificationCode();
-
-        authService.updateVerificationCode(email, newCode);
-
-        emailService.sendVerificationEmail(email, newCode);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/validate-registration")
-    public ResponseEntity<Map<String, Object>> validateRegistration(@RequestBody RegisterRequest registerRequest) {
-        Map<String, Object> response = authService.validateRegistration(registerRequest);
-        return response.get("success").equals(true) ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
-    }
 
     @Operation(summary = "Получить защищённые данные", security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/protected-data")

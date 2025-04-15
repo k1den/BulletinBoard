@@ -20,20 +20,16 @@ public class ProtectedController {
             description = "Требуется валидный JWT токен в заголовке Authorization"
     )
     @GetMapping("/data")
-    @PreAuthorize("isAuthenticated()") // Гарантирует, что доступ есть только у аутентифицированных пользователей
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> getProtectedData() {
-        // Получаем данные аутентификации из контекста безопасности
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Дополнительная проверка (не обязательно, но рекомендуется)
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(403).body("Доступ запрещён");
         }
 
-        // Получаем имя пользователя из аутентификации
         String username = authentication.getName();
 
-        // Логируем доступ (для отладки)
         System.out.println("Доступ предоставлен пользователю: " + username);
 
         return ResponseEntity.ok("Доступ разрешён для пользователя: " + username);

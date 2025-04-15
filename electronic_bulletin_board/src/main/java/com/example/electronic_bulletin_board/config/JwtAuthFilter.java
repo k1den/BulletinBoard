@@ -36,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        System.out.println("Authorization header: " + authHeader); // Логируем заголовок
+        System.out.println("Authorization header: " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             System.out.println("No or invalid Authorization header");
@@ -45,9 +45,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        System.out.println("JWT token: " + jwt); // Логируем токен
+        System.out.println("JWT token: " + jwt);
         userEmail = jwtUtils.extractUsername(jwt);
-        System.out.println("Extracted email: " + userEmail); // Логируем email
+        System.out.println("Extracted email: " + userEmail);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
