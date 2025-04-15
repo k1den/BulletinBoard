@@ -1,75 +1,34 @@
 package com.example.electronic_bulletin_board.service;
 
-import com.example.electronic_bulletin_board.dto.LoginRequest;
 import com.example.electronic_bulletin_board.dto.RegisterRequest;
 import com.example.electronic_bulletin_board.entity.UserVerification;
 import com.example.electronic_bulletin_board.entity.Users;
 import com.example.electronic_bulletin_board.repository.UserRepository;
 import com.example.electronic_bulletin_board.repository.UserVerificationRepository;
 import com.example.electronic_bulletin_board.validators.AuthValidator;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserVerificationRepository userVerificationRepository;
-
-    private boolean session = false;
-    @Getter
-    private String currentLogin = null;
-    @Getter
-    private String currentPassword = null;
-
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final UserRepository userRepository;
+    private final UserVerificationRepository userVerificationRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Users register(RegisterRequest registerRequest) {
-        // Создаем нового юзера
         Users user = new Users();
         user.setEmail(registerRequest.getEmail());
         user.setLogin(registerRequest.getLogin());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // Хэшируем пароль
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(registerRequest.getRole());
         user.setPhone(registerRequest.getPhone());
         return userRepository.save(user);
-    }
-
-    public Users login(LoginRequest loginRequest) {
-        Users user = userRepository.findByEmail(loginRequest.getEmail());
-        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) { // Проверяем пароль
-            session = true;
-            currentLogin = user.getLogin();
-            currentPassword = user.getPassword();
-            return user;
-        }
-        session = false;
-        currentLogin = null;
-        currentPassword = null;
-        return null;
-    }
-
-    public boolean logout() {
-        if (!session) {
-            return false;
-        }
-        session = false;
-        currentLogin = null;
-        currentPassword = null;
-        return true;
-    }
-
-    public boolean isSessionActive() {
-        return session;
     }
 
     public void saveVerificationCode(String email, String verificationCode) {
