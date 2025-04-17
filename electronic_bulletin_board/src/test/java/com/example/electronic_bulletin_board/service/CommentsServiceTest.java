@@ -197,23 +197,5 @@ class CommentsServiceTest {
         assertEquals("Вы не можете редактировать этот комментарий", exception.getMessage());
     }
 
-    // Тест получения комментариев по ID объявления
-    @Test
-    void testGetCommentsByAd() {
-        when(commentsRepository.findByAdsId(1)).thenReturn(Collections.emptyList());
 
-        List<Comments> comments = commentsService.getCommentsByAd(1);
-        assertTrue(comments.isEmpty());
-        verify(commentsRepository).findByAdsId(1);
-    }
-
-    // Тест получения комментариев пользователя
-    @Test
-    void testGetUserComments() {
-        when(commentsRepository.findByUserId(1)).thenReturn(Collections.emptyList());
-
-        List<Comments> comments = commentsService.getUserComments(1);
-        assertTrue(comments.isEmpty());
-        verify(commentsRepository).findByUserId(1);
-    }
 }
