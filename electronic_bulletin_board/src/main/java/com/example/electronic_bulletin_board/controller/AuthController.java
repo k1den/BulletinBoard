@@ -83,10 +83,8 @@ public class AuthController {
         return ResponseEntity.ok("Пользователь успешно вышел из системы");
     }
 
-
-    @Operation(summary = "Получить защищённые данные", security = @SecurityRequirement(name = "JWT"))
-    @GetMapping("/protected-data")
-    public ResponseEntity<String> getProtectedData() {
-        return ResponseEntity.ok("Доступ разрешён");
+    @GetMapping("/oauth-success")
+    public ResponseEntity<JwtResponse> oauthSuccess(@RequestParam String token) {
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }

@@ -30,6 +30,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5") // JWT API
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")   // JWT Implementation
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5") // JWT Jackson support
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
 	// Lombok
 	compileOnly("org.projectlombok:lombok:1.18.30")
@@ -45,6 +46,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test") // Security testing
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+
 }
 
 tasks.withType<Test> {
