@@ -704,8 +704,50 @@ function toggleSearchForm() {
     }
 }
 
+function googleTranslateElementInit() {
+    var savedLang = localStorage.getItem('google_translate_lang');
+    var defaultLang = savedLang ? savedLang : 'ru';
+
+    new google.translate.TranslateElement({
+        pageLanguage: 'ru',
+        includedLanguages: 'ru,en,de',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+    }, 'google_translate_element');
+
+    if (savedLang) {
+        setTimeout(function() {
+            var select = document.querySelector('.goog-te-combo');
+            if (select) {
+                select.value = savedLang;
+                var event = new Event('change');
+                select.dispatchEvent(event);
+            }
+        }, 1000);
+    }
+
+    setTimeout(function() {
+        var select = document.querySelector('.goog-te-combo');
+        if (select) {
+            select.addEventListener('change', function() {
+                localStorage.setItem('google_translate_lang', this.value);
+            });
+        }
+
+        var banner = document.querySelector('.goog-te-banner-frame');
+        if (banner) banner.style.display = 'none';
+
+        var gadget = document.querySelector('.goog-te-gadget');
+        if (gadget) {
+            var textNodes = Array.from(gadget.childNodes).filter(node => node.nodeType === 3);
+            textNodes.forEach(node => node.remove());
+        }
+    }, 1500);
+}
+
 window.onload = function() {
     loadCategories();
     loadCurrentUser();
     updateAuthButtons();
+    googleTranslateElementInit();
 };
