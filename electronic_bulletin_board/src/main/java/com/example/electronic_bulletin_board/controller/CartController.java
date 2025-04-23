@@ -30,7 +30,6 @@ public class CartController {
     @Autowired
     private CartRepository cartRepository;
 
-    // Создание корзины
     @PostMapping("/create")
     @Operation(summary = "Создание корзины", description = "Создает новую корзину для текущего пользователя")
     @ApiResponses(value = {
@@ -43,7 +42,6 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    // Добавление товара в корзину
     @PostMapping("/{cartId}/add/{adId}")
     @Operation(summary = "Добавление товара в корзину", description = "Добавляет товар в корзину по идентификаторам корзины и объявления")
     @ApiResponses(value = {
@@ -57,7 +55,6 @@ public class CartController {
         return ResponseEntity.ok(cartItem);
     }
 
-    // Получение всех товаров в корзине
     @GetMapping("/items")
     @Operation(summary = "Получение товаров в корзине", description = "Возвращает список всех товаров в корзине текущего пользователя")
     @ApiResponses(value = {
@@ -72,7 +69,6 @@ public class CartController {
         return ResponseEntity.ok(cartItems);
     }
 
-    // Удаление товара из корзины
     @DeleteMapping("/{cartId}/remove/{itemId}")
     @Operation(summary = "Удаление товара из корзины", description = "Удаляет товар из корзины по идентификаторам корзины и товара")
     @ApiResponses(value = {

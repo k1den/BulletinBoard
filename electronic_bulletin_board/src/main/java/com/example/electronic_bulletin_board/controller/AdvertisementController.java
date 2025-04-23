@@ -49,9 +49,9 @@ public class AdvertisementController {
             @RequestParam Integer idCategory,
             @RequestParam String description,
             @RequestParam BigDecimal price,
-            @RequestParam MultipartFile photo) {
+            @RequestParam(required = false) MultipartFile photo) {
         try {
-            byte[] photoBytes = AdvertisementService.compressImage(photo, 0.5f);
+            byte[] photoBytes = (photo != null && !photo.isEmpty()) ? AdvertisementService.compressImage(photo, 0.5f) : null;
 
             AdvertisementDto advertisementDto = new AdvertisementDto();
             advertisementDto.setTitle(title);
@@ -87,23 +87,15 @@ public class AdvertisementController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Редактирование объявления", description = "Обновляет данные объявления по его идентификатору")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Объявление успешно обновлено"),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
-            @ApiResponse(responseCode = "400", description = "Некорректные данные"),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован"),
-            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
-    })
     public ResponseEntity<?> updateAdvertisement(
             @PathVariable Integer id,
             @RequestParam String title,
             @RequestParam Integer idCategory,
             @RequestParam String description,
             @RequestParam BigDecimal price,
-            @RequestParam MultipartFile photo) {
+            @RequestParam(required = false) MultipartFile photo) { // Сделаем фото необязательным
         try {
-            byte[] photoBytes = AdvertisementService.compressImage(photo, 0.5f);
+            byte[] photoBytes = (photo != null && !photo.isEmpty()) ? AdvertisementService.compressImage(photo, 0.5f) : null;
 
             AdvertisementDto advertisementDto = new AdvertisementDto();
             advertisementDto.setTitle(title);
@@ -115,11 +107,12 @@ public class AdvertisementController {
             Ads ads = advertisementService.updateAdvertisement(id, advertisementDto);
             return ResponseEntity.ok(ads);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка загрузки файла");
         }
     }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение объявления по ID", description = "Возвращает данные объявления по его идентификатору")

@@ -110,6 +110,11 @@ public class AuthService {
                 throw new RuntimeException("Пароль должен содержать не менее 6 символов");
             }
 
+            // Проверка совпадения паролей
+            if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+                throw new RuntimeException("Пароли не совпадают");
+            }
+
             // Валидация, существует ли юзер с таким email или логином
             if (userRepository.findByEmail(registerRequest.getEmail()) != null) {
                 throw new RuntimeException("Пользователь с такой почтой уже существует");

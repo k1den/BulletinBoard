@@ -53,13 +53,15 @@ public class AdvertisementService {
         ads.setDescription(advertisementDto.getDescription());
         ads.setPrice(advertisementDto.getPrice());
         ads.setDate(new Date());
-        ads.setPhoto(advertisementDto.getPhoto());
 
-        // Значение категорию по id
+        // Установка фотографии только если она не null
+        if (advertisementDto.getPhoto() != null) {
+            ads.setPhoto(advertisementDto.getPhoto());
+        }
+
         Categories category = categoriesRepository.findById(advertisementDto.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
         ads.setIdCategory(category);
-
         ads.setIdUsers(user);
 
         return adsRepository.save(ads);
@@ -99,7 +101,11 @@ public class AdvertisementService {
         existingAds.setTitle(advertisementDto.getTitle());
         existingAds.setDescription(advertisementDto.getDescription());
         existingAds.setPrice(advertisementDto.getPrice());
-        existingAds.setPhoto(advertisementDto.getPhoto()); // Обновление изображения
+
+        // Обновление изображения только если оно было загружено
+        if (advertisementDto.getPhoto() != null) {
+            existingAds.setPhoto(advertisementDto.getPhoto());
+        }
 
         Categories category = categoriesRepository.findById(advertisementDto.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
@@ -107,6 +113,7 @@ public class AdvertisementService {
 
         return adsRepository.save(existingAds);
     }
+
 
     // Получение объявления по ID
     public Ads getAdvertisementById(Integer id) {
@@ -167,7 +174,6 @@ public class AdvertisementService {
         return byteArrayOutputStream.toByteArray();
     }
 
-    // В AdvertisementService добавьте этот метод
     public boolean isAdOwner(Integer adId, Integer userId) {
         Ads ad = adsRepository.findById(adId)
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));

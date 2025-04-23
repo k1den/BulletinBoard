@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ElectronicBulletinBoardApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ElectronicBulletinBoardApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ElectronicBulletinBoardApplication.class, args);
+    }
 
 }
