@@ -312,6 +312,8 @@ function hideSuccess() {
 // Сброс поиска
 function resetSearch() {
     document.getElementById('advertisementsByCategory').innerHTML = '';
+    document.getElementById('searchTitleInput').value = '';
+    document.getElementById('categoryNameSelect').selectedIndex = 0;
     document.getElementById('resetSearchButton').style.display = 'none';
 }
 
@@ -743,6 +745,47 @@ function googleTranslateElementInit() {
             textNodes.forEach(node => node.remove());
         }
     }, 1500);
+}
+
+function searchAdvertisementsByTitle() {
+    const searchText = document.getElementById('searchTitleInput').value.trim();
+
+    if (!searchText) {
+        showError('Введите текст для поиска');
+        return;
+    }
+
+    fetch(`${apiUrl}/search?title=${encodeURIComponent(searchText)}`)
+        .then(response => response.json())
+        .then(data => {
+            const advertisementsByCategoryContainer = document.getElementById('advertisementsByCategory');
+            advertisementsByCategoryContainer.innerHTML = '';
+
+            if (data.length === 0) {
+                advertisementsByCategoryContainer.innerHTML = '<p>Ничего не найдено</p>';
+                return;
+            }
+
+            data.forEach(ad => {
+                fetch(`${apiUrl}/photo/${ad.id}`)
+                    .then(response => response.text())
+                    .then(base64Image => {
+                        const card = createAdCard(ad, base64Image);
+                        advertisementsByCategoryContainer.appendChild(card);
+                        updateButtons();
+                    })
+                    .catch(error => {
+                        console.error('Ошибка загрузки изображения:', error);
+                        showError('Ошибка загрузки изображения');
+                    });
+            });
+
+            document.getElementById('resetSearchButton').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showError(error.message);
+        });
 }
 
 window.onload = function() {

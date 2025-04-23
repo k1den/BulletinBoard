@@ -10,4 +10,6 @@ import java.util.List;
 public interface AdvertisementRepository extends JpaRepository<Ads, Integer>  {
     @Query("SELECT a FROM Ads a JOIN a.idCategory c WHERE c.title = :categoryName")
     List<Ads> findByIdCategory_Title(@Param("categoryName") String categoryName);
+
+    List<Ads> findByTitleContainingIgnoreCase(String title);
 }

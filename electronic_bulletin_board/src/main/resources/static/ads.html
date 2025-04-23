@@ -49,11 +49,18 @@
 
 <div id="searchContainer" class="search-container" style="display: none;">
     <div id="searchCategoryContainer">
-        <h2>Поиск по категории</h2>
+        <h2>Поиск</h2>
+
+        <h3>По категории</h3>
         <select id="categoryNameSelect">
             <option value="">Выберите категорию</option>
         </select>
         <button id="getByCategoryButton">Получить Объявления</button>
+
+        <h3>По названию</h3>
+        <input type="text" id="searchTitleInput" placeholder="Введите название">
+        <button id="searchByTitleButton" onclick="searchAdvertisementsByTitle()">Найти</button>
+
         <button id="resetSearchButton" style="display:none;" onclick="resetSearch()">Сбросить поиск</button>
     </div>
 </div>

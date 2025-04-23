@@ -159,4 +159,10 @@ public class AdvertisementController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    @GetMapping("/search")
+    @Operation(summary = "Поиск объявлений по названию", description = "Возвращает список объявлений, содержащих указанную строку в названии")
+    public List<Ads> searchAdvertisementsByTitle(@RequestParam String title) {
+        return advertisementService.searchAdvertisementsByTitle(title);
+    }
 }

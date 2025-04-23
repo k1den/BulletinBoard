@@ -179,4 +179,8 @@ public class AdvertisementService {
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
         return ad.getIdUsers().getId().equals(userId);
     }
+
+    public List<Ads> searchAdvertisementsByTitle(String title) {
+        return adsRepository.findByTitleContainingIgnoreCase(title);
+    }
 }
