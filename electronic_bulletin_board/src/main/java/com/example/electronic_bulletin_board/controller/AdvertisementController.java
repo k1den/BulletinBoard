@@ -87,13 +87,20 @@ public class AdvertisementController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Редактирование объявления", description = "Редактирует объявление по его идентификатору")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Объявление успешно отредактировано"),
+            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
+            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован"),
+            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
     public ResponseEntity<?> updateAdvertisement(
             @PathVariable Integer id,
             @RequestParam String title,
             @RequestParam Integer idCategory,
             @RequestParam String description,
             @RequestParam BigDecimal price,
-            @RequestParam(required = false) MultipartFile photo) { // Сделаем фото необязательным
+            @RequestParam(required = false) MultipartFile photo) {
         try {
             byte[] photoBytes = (photo != null && !photo.isEmpty()) ? AdvertisementService.compressImage(photo, 0.5f) : null;
 
