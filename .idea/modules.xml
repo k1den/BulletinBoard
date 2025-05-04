@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/electronic_bulletin_board.iml" filepath="$PROJECT_DIR$/.idea/electronic_bulletin_board.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.electronic_bulletin_board.main~1.iml" filepath="$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.electronic_bulletin_board.main~1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/RGR.iml" filepath="$PROJECT_DIR$/.idea/RGR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.iml" filepath="$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.main.iml" filepath="$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.test.iml" filepath="$PROJECT_DIR$/.idea/modules/electronic_bulletin_board.test.iml" />
     </modules>
   </component>
 </project>
