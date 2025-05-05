@@ -59,12 +59,6 @@ public class AuthController {
             registerRequest.setPassword(password);
             registerRequest.setConfirmPassword(confirmPassword);
 
-            // Добавляем валидацию перед регистрацией
-            Map<String, Object> validationResponse = authService.validateRegistration(registerRequest);
-            if (!(boolean) validationResponse.get("success")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResponse.get("message"));
-            }
-
             Users user = authService.register(registerRequest);
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
@@ -154,5 +148,11 @@ public class AuthController {
         emailService.sendVerificationEmail(email, newCode);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/validate-registration")
+    public ResponseEntity<Map<String, Object>> validateRegistration(@RequestBody RegisterRequest registerRequest) {
+        Map<String, Object> response = authService.validateRegistration(registerRequest);
+        return response.get("success").equals(true) ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 }

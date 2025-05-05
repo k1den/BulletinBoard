@@ -116,7 +116,7 @@ async function sendVerificationCode(email) {
 // Функция для проверки введенного кода
 async function verifyCode() {
     const code = document.getElementById('verificationCode').value;
-    
+
     if (!code || code.length !== 6) {
         showError('Пожалуйста, введите 6-значный код подтверждения.');
         return;
@@ -135,7 +135,7 @@ async function verifyCode() {
         });
 
         const result = await handleResponse(response);
-        
+
         if (result.success) {
             // Если код верный - конец регистрации
             await completeRegistration();
@@ -166,7 +166,7 @@ async function completeRegistration() {
         });
 
         await handleResponse(response);
-        
+
         // Перенаправлление на страницу входа после успешной регистрации
         window.location.href = 'login.html?registered=true';
     } catch (error) {
@@ -192,20 +192,20 @@ function startResendTimer() {
     const timerElement = document.getElementById('timer');
     const resendButton = document.querySelector('#verificationForm button.secondary-button');
     let timeLeft = 60;
-    
+
     // Блокировка кнопки на время таймера
     resendButton.disabled = true;
-    
+
     // Очистка предыдущего таймера(если он был)
     if (resendTimeout) {
         clearInterval(resendTimeout);
     }
-    
+
     // Обновление таймера каждую секунду
     resendTimeout = setInterval(() => {
         timeLeft--;
         timerElement.textContent = timeLeft;
-        
+
         if (timeLeft <= 0) {
             clearInterval(resendTimeout);
             resendButton.disabled = false;
