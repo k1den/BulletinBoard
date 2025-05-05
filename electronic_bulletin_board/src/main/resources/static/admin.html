@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрирование объявлений</title>
+    <link rel="stylesheet" href="css/ads.css">
+</head>
+<body>
+<nav>
+    <div class="nav-buttons">
+        <button onclick="window.location.href='ads.html'">Назад к объявлениям</button>
+        <button onclick="logout()">Выйти</button>
+    </div>
+    <div id="navMessages">
+        <div id="navErrorContainer" style="display: none;">
+            <p id="navErrorMessage"></p>
+        </div>
+        <div id="navSuccessContainer" style="display: none;">
+            <p id="navSuccessMessage"></p>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Администрирование объявлений</h1>
+    <div class="card-container" id="allAdvertisements"></div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

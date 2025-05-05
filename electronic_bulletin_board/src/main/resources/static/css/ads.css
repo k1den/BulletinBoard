@@ -368,3 +368,66 @@ button:hover {
 #searchByTitleButton {
     margin-bottom: 15px;
 }
+
+.admin-card {
+    border: 2px solid #ff9800;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Контейнер для кнопок в админ-панели */
+.admin-card .admin-buttons {
+    display: flex;
+    flex-direction: column; /* Располагаем кнопки вертикально */
+    gap: 8px; /* Отступ между кнопками */
+    margin-top: 12px;
+}
+
+/* Стили для кнопок в админ-панели */
+.admin-card .admin-buttons button {
+    width: 100%; /* Кнопки на всю ширину */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* Стиль кнопки редактирования */
+.admin-card .admin-buttons .edit-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.admin-card .admin-buttons .edit-button:hover {
+    background-color: #45a049;
+}
+
+/* Стиль кнопки удаления */
+.admin-card .admin-buttons .delete-button {
+    background-color: #f44336;
+    color: white;
+    margin-top: 0; /* Убираем отступ сверху, так как gap уже задан */
+}
+
+.admin-card .admin-buttons .delete-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Стиль кнопки перехода в админ-панель */
+.admin-button {
+    background-color: #ff9800;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.admin-button:hover {
+    background-color: #e68a00;
+}

@@ -11,7 +11,7 @@
 
 <nav>
     <div class="nav-buttons">
-        <button id="addAdvertisementButton" onclick="toggleForm('addAdvertisementForm')">Добавить</button>
+        <button id="addAdvertisementButton" onclick="toggleForm('formContainer')">Добавить</button>
         <button id="searchByCategoryButton" onclick="toggleSearchForm()">Поиск</button>
         <button onclick="window.location.href='cart.html'">Корзина</button>
     </div>
@@ -55,7 +55,7 @@
         <select id="categoryNameSelect">
             <option value="">Выберите категорию</option>
         </select>
-        <button id="getByCategoryButton">Получить Объявления</button>
+        <button id="getByCategoryButton" onclick="getAdvertisementsByCategory()">Найти объявления</button>
 
         <h3>По названию</h3>
         <input type="text" id="searchTitleInput" placeholder="Введите название">
