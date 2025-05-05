@@ -13,6 +13,17 @@
     <content url="file://$MODULE_DIR$/../../electronic_bulletin_board/build/generated/sources/annotationProcessor/java/main">
       <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
     </content>
+    <content url="file://$MODULE_DIR$/../../electronic_bulletin_board/build/generated/sources/annotationProcessor/java/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main/resources" type="java-resource" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main/resources" type="java-resource" />
+    </content>
     <content url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../electronic_bulletin_board/src/main/resources" type="java-resource" />

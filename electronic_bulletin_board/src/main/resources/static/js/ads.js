@@ -642,10 +642,56 @@ async function submitAdForm() {
     }
 }
 
+function initializeGoogleTranslate() {
+    // Создаем div для виджета
+    const translateDiv = document.createElement('div');
+    translateDiv.id = 'google_translate_element';
+    translateDiv.style.position = 'fixed';
+    translateDiv.style.bottom = '20px';
+    translateDiv.style.right = '20px';
+    translateDiv.style.zIndex = '1000';
+    document.body.appendChild(translateDiv);
+
+    // Функция для загрузки скрипта Google Translate
+    function loadGoogleTranslateScript() {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        document.head.appendChild(script);
+    }
+
+    // Функция инициализации виджета
+    window.googleTranslateElementInit = function() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ru',
+            includedLanguages: 'en,es,fr,de,zh-CN,ja,ar,ru',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        // Оставляем только стилизацию для комбобокса (по желанию)
+        const style = document.createElement('style');
+        style.textContent = `
+            .goog-te-gadget .goog-te-combo {
+                padding: 5px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                background-color: white;
+                color: #000 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    };
+
+    // Загружаем скрипт Google Translate
+    loadGoogleTranslateScript();
+}
+
 window.onload = function() {
     loadCategories();
     loadCurrentUser();
     updateAuthButtons();
+    initializeGoogleTranslate();
 
     // Добавьте этот код
     const addForm = document.getElementById('addAdvertisementForm');
