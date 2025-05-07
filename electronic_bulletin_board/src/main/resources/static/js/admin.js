@@ -176,6 +176,7 @@ async function editAdvertisement(id) {
 
         // 2. Создаем модальное окно для редактирования
         const modal = document.createElement('div');
+        modal.id = 'editAdModal';
         modal.style.position = 'fixed';
         modal.style.top = '50%';
         modal.style.left = '50%';
@@ -272,7 +273,7 @@ async function submitAdEdit(id) {
         }
 
         // Закрываем форму и обновляем список
-        document.querySelector('div[style*="position: fixed"]').remove();
+        document.getElementById('editAdModal')?.remove();
         showSuccess('Объявление успешно обновлено!');
         getAllAdvertisementsForAdmin();
 
